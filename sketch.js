@@ -100,7 +100,6 @@ function onBallDrop({ player }) {
 
 function onPlatformAdded({ player, x, y }) {
   if (!partyIsHost()) return;
-  console.log(player);
   shared[player].platforms.push({ x, y });
   const platform = Bodies.rectangle(
     x + platformW / 2,
