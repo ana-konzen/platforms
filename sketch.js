@@ -1,11 +1,18 @@
 //config
+const maxPlatforms = 5;
+
 const platformW = 40;
 const platformH = 10;
-const maxPlatforms = 5;
 const wallW = 10;
 const ballRadius = 20;
 const targetW = 50;
 const targetH = 10;
+
+//style
+const targetColor = "green";
+const wallColor = "black";
+const player1Color = "red";
+const player2Color = "blue";
 
 // matter.js setup
 const Engine = Matter.Engine;
@@ -59,8 +66,8 @@ function setup() {
     setPlayerData(player);
   }
 
-  shared.player1.color = "red";
-  shared.player2.color = "blue";
+  shared.player1.color = player1Color;
+  shared.player2.color = player2Color;
 
   currentPlayer = partyIsHost() ? "player1" : "player2";
 
@@ -84,6 +91,7 @@ function draw() {
   text(shared.player1.points, 15, 20);
   text(shared.player2.points, width - 20, 20);
 
+  fill(wallColor);
   for (const wall of walls) {
     rect(wall.position.x, wall.position.y, wallW, height);
   }
@@ -167,7 +175,7 @@ function renderPlatforms(player) {
 }
 
 function renderTarget(player) {
-  fill("green");
+  fill(targetColor);
   rect(shared[player].target.x, shared[player].target.y, targetW, targetH);
 }
 
