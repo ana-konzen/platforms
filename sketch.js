@@ -76,11 +76,11 @@ function draw() {
 
   background("#f7f7ed");
 
-  for (const player in players) {
-    renderTarget(player);
-    renderPlatforms(player);
-    renderBall(player);
-    updateState(player);
+  for (const playerKey in players) {
+    renderTarget(playerKey);
+    renderPlatforms(playerKey);
+    renderBall(playerKey);
+    updateState(playerKey);
   }
 
   fill("black");
