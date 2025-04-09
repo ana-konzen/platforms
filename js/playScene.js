@@ -18,7 +18,7 @@ const Composite = Matter.Composite;
 
 const engine = Engine.create();
 
-const players = {
+const localPlayerData = {
   player1: { name: "player1", color: STYLE.player1Color, platforms: [] },
   player2: { name: "player2", color: STYLE.player2Color, platforms: [] },
 };
@@ -32,8 +32,6 @@ export function preload() {
 }
 
 export function setup() {
-  rectMode(CENTER);
-
   noStroke();
   walls = [
     Bodies.rectangle(wallW / 2, height / 2, wallW, height, { isStatic: true }),
@@ -42,25 +40,25 @@ export function setup() {
   ];
   Composite.add(engine.world, walls);
 
-  players.player1.boundaries = {
+  localPlayerData.player1.boundaries = {
     left: wallW,
     right: width / 2 - wallW,
   };
-  players.player2.boundaries = {
+  localPlayerData.player2.boundaries = {
     left: width / 2 + wallW,
     right: width - wallW,
   };
 
-  for (const playerKey in players) {
-    const player = players[playerKey];
+  for (const playerKey in localPlayerData) {
+    const player = localPlayerData[playerKey];
     setPlayerData(player);
     player.ball = Bodies.circle(randomPos(player.boundaries), 0, ballRadius, { restitution: 0.7 });
   }
 
-  shared.player1.color = players.player1.color;
-  shared.player2.color = players.player2.color;
+  shared.player1.color = localPlayerData.player1.color;
+  shared.player2.color = localPlayerData.player2.color;
 
-  currentPlayer = partyIsHost() ? players.player1 : players.player2;
+  currentPlayer = partyIsHost() ? localPlayerData.player1 : localPlayerData.player2;
 
   partySubscribe("dropBall", onBallDrop);
   partySubscribe("addPlatform", onPlatformAdded);
@@ -73,6 +71,8 @@ export function update() {
 }
 
 export function draw() {
+  rectMode(CENTER);
+
   Engine.update(engine);
 
   background(STYLE.background);
@@ -89,7 +89,7 @@ export function draw() {
   text("PLAYER 1", width / 4, 30);
   text("PLAYER 2", (width * 3) / 4, 30);
 
-  for (const playerKey in players) {
+  for (const playerKey in localPlayerData) {
     updateState(playerKey);
     renderTarget(playerKey);
     renderPlatforms(playerKey);
@@ -125,7 +125,7 @@ export function mousePressed() {
 }
 
 export function onBallDrop({ player }) {
-  Composite.add(engine.world, [players[player].ball]);
+  Composite.add(engine.world, [localPlayerData[player].ball]);
 }
 
 export function onPlatformAdded({ player, x, y }) {
@@ -135,7 +135,7 @@ export function onPlatformAdded({ player, x, y }) {
     isStatic: true,
   });
   Composite.add(engine.world, [platform]);
-  players[player].platforms.push(platform);
+  localPlayerData[player].platforms.push(platform);
 }
 
 function setPlayerData(player) {
@@ -155,7 +155,7 @@ function checkWinner(playerKey) {
 }
 
 function updateState(playerKey) {
-  const player = players[playerKey];
+  const player = localPlayerData[playerKey];
   if (player.ball.position.y > height) {
     Body.setPosition(player.ball, { x: randomPos(player.boundaries), y: 0 });
     Composite.remove(engine.world, [player.ball]);
@@ -190,7 +190,7 @@ function renderTarget(player) {
 }
 
 function renderBall(playerProperty) {
-  const player = players[playerProperty];
+  const player = localPlayerData[playerProperty];
 
   if (partyIsHost()) {
     shared[playerProperty].ball.x = player.ball.position.x;
