@@ -3,7 +3,6 @@ import { changeScene, scenes } from "./main.js";
 
 //config
 const maxPlatforms = 5;
-
 const platformW = 40;
 const platformH = 10;
 const wallW = 1;
