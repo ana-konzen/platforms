@@ -30,12 +30,11 @@ let walls;
 let currentPlayer;
 let shared;
 
-function preload() {
-  partyConnect("wss://demoserver.p5party.org", "ana_danit_fiona");
+export function preload() {
   shared = partyLoadShared("globals");
 }
 
-function setup() {
+export function setup() {
   createCanvas(400, 600);
   rectMode(CENTER);
 
@@ -71,7 +70,7 @@ function setup() {
   partySubscribe("addPlatform", onPlatformAdded);
 }
 
-function draw() {
+export function draw() {
   Engine.update(engine);
 
   background("#f7f7ed");
@@ -93,12 +92,12 @@ function draw() {
   }
 }
 
-function onBallDrop({ player }) {
+export function onBallDrop({ player }) {
   if (!partyIsHost()) return;
   Composite.add(engine.world, [players[player].ball]);
 }
 
-function onPlatformAdded({ player, x, y }) {
+export function onPlatformAdded({ player, x, y }) {
   if (!partyIsHost()) return;
   shared[player].platforms.push({ x, y });
   const platform = Bodies.rectangle(
@@ -114,13 +113,13 @@ function onPlatformAdded({ player, x, y }) {
   players[player].platforms.push(platform);
 }
 
-function keyPressed() {
+export function keyPressed() {
   if (key === "b") {
     partyEmit("dropBall", { player: currentPlayer.name });
   }
 }
 
-function mousePressed() {
+export function mousePressed() {
   if (shared[currentPlayer.name].platforms.length >= maxPlatforms) return;
   if (mouseX < currentPlayer.boundaries.left || mouseX > currentPlayer.boundaries.right) return;
   partyEmit("addPlatform", {
