@@ -18,6 +18,7 @@ export function setup() {
   } else {
     me.name = "player2";
   }
+  shared.status = "waiting";
 }
 
 export function enter() {}
