@@ -3,7 +3,6 @@ import { changeScene, scenes } from "./main.js";
 
 //config
 const maxPlatforms = 5;
-const pointsToWin = 1;
 
 const platformW = 40;
 const platformH = 10;
@@ -34,6 +33,8 @@ export function preload() {
 }
 
 export function setup() {
+  shared.winner = "";
+
   createCanvas(400, 600);
   rectMode(CENTER);
 
@@ -69,33 +70,35 @@ export function setup() {
   partySubscribe("addPlatform", onPlatformAdded);
 }
 
+export function update() {
+  if (shared.status === "end") {
+    changeScene(scenes.end);
+  }
+}
+
 export function draw() {
   Engine.update(engine);
 
   background(STYLE.background);
 
   fill(STYLE.player1Color);
-  rect(width/4, height/2, width/2 - wallW, height, 0);
+  rect(width / 4, height / 2, width / 2 - wallW, height, 0);
   fill(STYLE.player2Color);
-  rect(width*3/4, height/2, width/2 - wallW, height, 0);
+  rect((width * 3) / 4, height / 2, width / 2 - wallW, height, 0);
 
-  textFont('Helvetica');
+  textFont("Helvetica");
   textSize(18);
   textAlign(CENTER);
-  fill('white');
-  text('PLAYER 1', width/4, 30);
-  text('PLAYER 2', width*3/4, 30);
+  fill("white");
+  text("PLAYER 1", width / 4, 30);
+  text("PLAYER 2", (width * 3) / 4, 30);
 
   for (const playerKey in players) {
+    updateState(playerKey);
     renderTarget(playerKey);
     renderPlatforms(playerKey);
     renderBall(playerKey);
-    updateState(playerKey);
   }
-
-  fill("white");
-  text(shared.player1.points, 15, 20);
-  text(shared.player2.points, width - 20, 20);
 
   fill(STYLE.wallColor);
   for (const wall of walls) {
@@ -104,7 +107,6 @@ export function draw() {
 }
 
 export function onBallDrop({ player }) {
-  if (!partyIsHost()) return;
   Composite.add(engine.world, [players[player].ball]);
 }
 
@@ -142,7 +144,6 @@ export function mousePressed() {
 
 function setPlayerData(player) {
   shared[player.name] = {
-    points: 0,
     platforms: [],
     ball: { x: randomPos(player.boundaries), y: 0 },
     target: { x: randomPos(player.boundaries), y: height - targetH / 2 },
@@ -160,12 +161,11 @@ function renderBall(playerProperty) {
 }
 
 function checkWinner(playerKey) {
-  if (shared[playerKey].points >= pointsToWin) {
-    if (partyIsHost()) {
-      shared.winner = playerKey;
-      shared.status = "ended";
-      changeScene(scenes.end);
-    }
+  if (!partyIsHost()) return;
+  if (partyIsHost()) {
+    console.log(playerKey);
+    shared.winner = playerKey;
+    shared.status = "end";
   }
 }
 
@@ -182,10 +182,10 @@ function updateState(playerKey) {
       shared[playerKey].platforms = [];
       shared[playerKey].target.x = randomPos(player.boundaries);
       if (
-        player.ball.position.x > shared[playerKey].target.x &&
-        player.ball.position.x < shared[playerKey].target.x + targetW
+        player.ball.position.x >= shared[playerKey].target.x &&
+        player.ball.position.x <= shared[playerKey].target.x + targetW
       ) {
-        shared[playerKey].points++;
+        console.log("winner");
         checkWinner(playerKey);
       }
     }
@@ -206,4 +206,10 @@ function renderTarget(player) {
 
 function randomPos(boundaries) {
   return random(boundaries.left, boundaries.right);
+}
+
+export function enter() {
+  if (partyIsHost()) {
+    shared.status = "playing";
+  }
 }

@@ -10,7 +10,7 @@ export function preload() {
   guests = partyLoadGuestShareds();
   me = partyLoadMyShared();
   shared = partyLoadShared("shared");
-  bgImage = loadImage('assets/background.png');
+  bgImage = loadImage("assets/background.png");
 }
 
 export function setup() {
@@ -40,13 +40,13 @@ export function mousePressed() {
 export function draw() {
   background(bgImage);
 
-  textFont('Helvetica');
+  textFont("Helvetica");
   textSize(60);
   textAlign(CENTER);
-  fill('black');
-  text('PLATFORMS', width/2, height/3);
+  fill("black");
+  text("PLATFORMS", width / 2, height / 3);
 
-  textSize(24);
+  textSize(18);
   let startText = "waiting for players..";
   if (guests.length === nPlayers) {
     if (partyIsHost()) {

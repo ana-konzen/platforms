@@ -6,14 +6,16 @@ let me;
 let bgImage;
 
 export function preload() {
-  shared = partyLoadShared("shared");
+  shared = partyLoadShared("globals");
   me = partyLoadMyShared();
-  bgImage = loadImage('assets/background.png');
+  bgImage = loadImage("assets/background.png");
 }
 
 export function setup() {}
 
-export function enter() {}
+export function enter() {
+  console.log(shared.winner);
+}
 
 export function update() {
   if (shared.status === "waiting") {
@@ -23,15 +25,15 @@ export function update() {
 
 export function draw() {
   background(bgImage);
-  
-  textFont('Helvetica');
-  textSize(72);
+
+  textFont("Helvetica");
+  textSize(40);
   textAlign(CENTER);
-  fill('black');
-  text(shared.winner === me.name ? "YOU WIN!" : "YOU LOSE!", width/2, height/3);
-  
-  textSize(24);
-  text('Click to play again', width/2, height - 100);
+  fill("black");
+  text(`${shared.winner} wins`, width / 2, height / 3);
+
+  textSize(18);
+  text("click to play again", width / 2, height - 100);
 }
 
 export function mousePressed() {
