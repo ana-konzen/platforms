@@ -6,7 +6,7 @@ const maxPlatforms = 5;
 
 const platformW = 40;
 const platformH = 10;
-const wallW = 10;
+const wallW = 1;
 const ballRadius = 10;
 const targetW = 50;
 const targetH = 10;
@@ -97,7 +97,7 @@ export function draw() {
     renderBall(playerKey);
   }
 
-  fill(0);
+  fill(STYLE.wallColor);
   for (const wall of walls) {
     rect(wall.position.x, wall.position.y, wallW, height);
   }
