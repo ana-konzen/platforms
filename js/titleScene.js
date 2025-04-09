@@ -4,11 +4,13 @@ import { STYLE } from "./style.js";
 const nPlayers = 2;
 
 let guests, me, shared;
+let bgImage;
 
 export function preload() {
   guests = partyLoadGuestShareds();
   me = partyLoadMyShared();
   shared = partyLoadShared("shared");
+  bgImage = loadImage('assets/background.png');
 }
 
 export function setup() {
@@ -36,8 +38,15 @@ export function mousePressed() {
 }
 
 export function draw() {
-  background(STYLE.background);
+  background(bgImage);
 
+  textFont('Helvetica');
+  textSize(60);
+  textAlign(CENTER);
+  fill('black');
+  text('PLATFORMS', width/2, height/3);
+
+  textSize(24);
   let startText = "waiting for players..";
   if (guests.length === nPlayers) {
     if (partyIsHost()) {

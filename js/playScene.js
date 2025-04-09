@@ -1,11 +1,13 @@
 import { STYLE } from "./style.js";
+import { changeScene, scenes } from "./main.js";
 
 //config
 const maxPlatforms = 5;
+const pointsToWin = 1;
 
 const platformW = 40;
 const platformH = 10;
-const wallW = 10;
+const wallW = 1;
 const ballRadius = 20;
 const targetW = 50;
 const targetH = 10;
@@ -72,6 +74,18 @@ export function draw() {
 
   background(STYLE.background);
 
+  fill(STYLE.player1Color);
+  rect(width/4, height/2, width/2 - wallW, height, 0);
+  fill(STYLE.player2Color);
+  rect(width*3/4, height/2, width/2 - wallW, height, 0);
+
+  textFont('Helvetica');
+  textSize(18);
+  textAlign(CENTER);
+  fill('white');
+  text('PLAYER 1', width/4, 30);
+  text('PLAYER 2', width*3/4, 30);
+
   for (const playerKey in players) {
     renderTarget(playerKey);
     renderPlatforms(playerKey);
@@ -79,7 +93,7 @@ export function draw() {
     updateState(playerKey);
   }
 
-  fill("black");
+  fill("white");
   text(shared.player1.points, 15, 20);
   text(shared.player2.points, width - 20, 20);
 
@@ -141,8 +155,18 @@ function renderBall(playerProperty) {
     shared[playerProperty].ball.x = player.ball.position.x;
     shared[playerProperty].ball.y = player.ball.position.y;
   }
-  fill(shared[playerProperty].color);
+  fill(STYLE.ballColor);
   ellipse(shared[playerProperty].ball.x, shared[playerProperty].ball.y, ballRadius);
+}
+
+function checkWinner(playerKey) {
+  if (shared[playerKey].points >= pointsToWin) {
+    if (partyIsHost()) {
+      shared.winner = playerKey;
+      shared.status = "ended";
+      changeScene(scenes.end);
+    }
+  }
 }
 
 function updateState(playerKey) {
@@ -162,13 +186,14 @@ function updateState(playerKey) {
         player.ball.position.x < shared[playerKey].target.x + targetW
       ) {
         shared[playerKey].points++;
+        checkWinner(playerKey);
       }
     }
   }
 }
 
 function renderPlatforms(player) {
-  fill(shared[player].color);
+  fill(STYLE.platformColor);
   for (const platform of shared[player].platforms) {
     rect(platform.x, platform.y, platformW, platformH);
   }
