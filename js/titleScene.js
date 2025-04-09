@@ -1,16 +1,14 @@
 import { changeScene, scenes } from "./main.js";
-import { STYLE } from "./style.js";
+import { renderBackground } from "./background.js";
 
 const nPlayers = 2;
 
 let guests, me, shared;
-let bgImage;
 
 export function preload() {
   guests = partyLoadGuestShareds();
   me = partyLoadMyShared();
   shared = partyLoadShared("shared");
-  bgImage = loadImage("assets/background.png");
 }
 
 export function setup() {
@@ -38,7 +36,7 @@ export function mousePressed() {
 }
 
 export function draw() {
-  background(bgImage);
+  renderBackground();
 
   textFont("Helvetica");
   textSize(60);

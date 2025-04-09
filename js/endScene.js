@@ -1,14 +1,12 @@
 import { changeScene, scenes } from "./main.js";
-import { STYLE } from "./style.js";
+import { renderBackground } from "./background.js";
 
 let shared;
-let me;
 let bgImage;
 
 export function preload() {
   shared = partyLoadShared("globals");
   me = partyLoadMyShared();
-  bgImage = loadImage("assets/background.png");
 }
 
 export function setup() {}
@@ -24,7 +22,7 @@ export function update() {
 }
 
 export function draw() {
-  background(bgImage);
+  renderBackground();
 
   textFont("Helvetica");
   textSize(40);
