@@ -6,7 +6,7 @@ const maxPlatforms = 5;
 
 const platformW = 40;
 const platformH = 10;
-const wallW = 1;
+const wallW = 10;
 const ballRadius = 10;
 const targetW = 50;
 const targetH = 10;
@@ -33,9 +33,6 @@ export function preload() {
 }
 
 export function setup() {
-  shared.winner = "";
-
-  createCanvas(400, 600);
   rectMode(CENTER);
 
   noStroke();
@@ -47,12 +44,12 @@ export function setup() {
   Composite.add(engine.world, walls);
 
   players.player1.boundaries = {
-    left: wallW / 2,
+    left: wallW,
     right: width / 2 - wallW,
   };
   players.player2.boundaries = {
     left: width / 2 + wallW,
-    right: width - wallW / 2,
+    right: width - wallW,
   };
 
   for (const playerKey in players) {
@@ -100,7 +97,7 @@ export function draw() {
     renderBall(playerKey);
   }
 
-  fill(STYLE.wallColor);
+  fill(0);
   for (const wall of walls) {
     rect(wall.position.x, wall.position.y, wallW, height);
   }

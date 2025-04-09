@@ -40,4 +40,6 @@ export function mousePressed() {
   shared.status = "waiting";
 }
 
-export function exit() {}
+export function exit() {
+  shared.winner = "";
+}
