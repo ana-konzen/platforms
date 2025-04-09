@@ -103,18 +103,10 @@ export function draw() {
   }
 }
 
-export function onBallDrop({ player }) {
-  Composite.add(engine.world, [players[player].ball]);
-}
-
-export function onPlatformAdded({ player, x, y }) {
-  if (!partyIsHost()) return;
-  shared[player].platforms.push({ x, y });
-  const platform = Bodies.rectangle(x, y, platformW, platformH, {
-    isStatic: true,
-  });
-  Composite.add(engine.world, [platform]);
-  players[player].platforms.push(platform);
+export function enter() {
+  if (partyIsHost()) {
+    shared.status = "playing";
+  }
 }
 
 export function keyPressed() {
@@ -131,6 +123,20 @@ export function mousePressed() {
     x: mouseX,
     y: mouseY,
   });
+}
+
+export function onBallDrop({ player }) {
+  Composite.add(engine.world, [players[player].ball]);
+}
+
+export function onPlatformAdded({ player, x, y }) {
+  if (!partyIsHost()) return;
+  shared[player].platforms.push({ x, y });
+  const platform = Bodies.rectangle(x, y, platformW, platformH, {
+    isStatic: true,
+  });
+  Composite.add(engine.world, [platform]);
+  players[player].platforms.push(platform);
 }
 
 function setPlayerData(player) {
@@ -197,10 +203,4 @@ function renderBall(playerProperty) {
 
 function randomPos(boundaries) {
   return random(boundaries.left, boundaries.right);
-}
-
-export function enter() {
-  if (partyIsHost()) {
-    shared.status = "playing";
-  }
 }
