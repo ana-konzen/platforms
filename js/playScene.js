@@ -142,7 +142,7 @@ function setPlayerData(player) {
   shared[player.name] = {
     platforms: [],
     ball: { x: randomPos(player.boundaries), y: 0 },
-    target: { x: randomPos(player.boundaries), y: height - targetH / 2 },
+    target: { x: randomPos(player.boundaries), y: height - targetH / 2 - 10 },
   };
 }
 
@@ -180,13 +180,13 @@ function updateState(playerKey) {
 function renderPlatforms(player) {
   fill(STYLE.platformColor);
   for (const platform of shared[player].platforms) {
-    rect(platform.x, platform.y, platformW, platformH);
+    rect(platform.x, platform.y, platformW, platformH, platformH / 2);
   }
 }
 
 function renderTarget(player) {
   fill(STYLE.targetColor);
-  rect(shared[player].target.x, shared[player].target.y, targetW, targetH);
+  rect(shared[player].target.x, shared[player].target.y, targetW, targetH, targetH / 2);
 }
 
 function renderBall(playerProperty) {
