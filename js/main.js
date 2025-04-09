@@ -24,7 +24,7 @@ let partyInitialized = false;
 export const scenes = {
   title: titleScene,
   play: playScene,
-  endScene: endScene,
+  end: endScene,
 };
 
 // Initialize p5.party
@@ -69,7 +69,6 @@ window.preload = function () {
 };
 
 window.setup = function () {
-  //   noCanvas();
   createCanvas(960, 540);
 
   Object.values(scenes).forEach((scene) => {

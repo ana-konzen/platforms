@@ -1,3 +1,5 @@
+import { STYLE } from "./style.js";
+
 //config
 const maxPlatforms = 5;
 
@@ -8,13 +10,8 @@ const ballRadius = 20;
 const targetW = 50;
 const targetH = 10;
 
-//style
-const targetColor = "green";
-const wallColor = "black";
-
 // matter.js setup
 const Engine = Matter.Engine;
-const Runner = Matter.Runner;
 const Bodies = Matter.Bodies;
 const Body = Matter.Body;
 const Composite = Matter.Composite;
@@ -22,8 +19,8 @@ const Composite = Matter.Composite;
 const engine = Engine.create();
 
 const players = {
-  player1: { name: "player1", color: "red", platforms: [] },
-  player2: { name: "player2", color: "blue", platforms: [] },
+  player1: { name: "player1", color: STYLE.player1Color, platforms: [] },
+  player2: { name: "player2", color: STYLE.player2Color, platforms: [] },
 };
 
 let walls;
@@ -73,7 +70,7 @@ export function setup() {
 export function draw() {
   Engine.update(engine);
 
-  background("#f7f7ed");
+  background(STYLE.background);
 
   for (const playerKey in players) {
     renderTarget(playerKey);
@@ -86,7 +83,7 @@ export function draw() {
   text(shared.player1.points, 15, 20);
   text(shared.player2.points, width - 20, 20);
 
-  fill(wallColor);
+  fill(STYLE.wallColor);
   for (const wall of walls) {
     rect(wall.position.x, wall.position.y, wallW, height);
   }
@@ -178,7 +175,7 @@ function renderPlatforms(player) {
 }
 
 function renderTarget(player) {
-  fill(targetColor);
+  fill(STYLE.targetColor);
   rect(shared[player].target.x, shared[player].target.y, targetW, targetH);
 }
 
