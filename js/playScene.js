@@ -10,6 +10,8 @@ const ballRadius = 10;
 const targetW = 50;
 const targetH = 10;
 
+const renderWalls = false;
+
 // matter.js setup
 const Engine = Matter.Engine;
 const Bodies = Matter.Bodies;
@@ -184,9 +186,11 @@ function renderScene(player) {
   pg.push();
   pg.translate(-xOffset, 0);
 
-  pg.fill("black");
-  for (const wall of player.walls) {
-    pg.rect(wall.position.x, wall.position.y, wallW, height);
+  if (renderWalls) {
+    pg.fill(STYLE.wallColor);
+    for (const wall of player.walls) {
+      pg.rect(wall.position.x, wall.position.y, wallW, height);
+    }
   }
 
   pg.fill(STYLE.targetColor);
