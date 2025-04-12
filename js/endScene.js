@@ -1,7 +1,7 @@
 import { changeScene, scenes } from "./main.js";
 import { renderBackground } from "./background.js";
 
-let shared;
+let shared, me;
 let bgImage;
 
 export function preload() {

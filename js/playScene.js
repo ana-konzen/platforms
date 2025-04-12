@@ -5,7 +5,7 @@ import { changeScene, scenes } from "./main.js";
 const maxPlatforms = 5;
 const platformW = 40;
 const platformH = 10;
-const wallW = 1;
+const wallW = 5;
 const ballRadius = 10;
 const targetW = 50;
 const targetH = 10;
@@ -19,11 +19,10 @@ const Composite = Matter.Composite;
 const engine = Engine.create();
 
 const localPlayerData = {
-  player1: { name: "player1", color: STYLE.player1Color, platforms: [] },
-  player2: { name: "player2", color: STYLE.player2Color, platforms: [] },
+  player1: { name: "player 1", key: "player1", color: STYLE.player1Color, platforms: [] },
+  player2: { name: "player 2", key: "player2", color: STYLE.player2Color, platforms: [] },
 };
 
-let walls;
 let currentPlayer;
 let shared;
 
@@ -32,25 +31,23 @@ export function preload() {
 }
 
 export function setup() {
+  localPlayerData.player1.pg = createGraphics(width / 2, height);
+  localPlayerData.player2.pg = createGraphics(width / 2, height);
+
   noStroke();
-  walls = [
-    Bodies.rectangle(wallW / 2, height / 2, wallW, height, { isStatic: true }),
-    Bodies.rectangle(width - wallW / 2, height / 2, wallW, height, { isStatic: true }),
-    Bodies.rectangle(width / 2, height / 2, wallW, height, { isStatic: true }),
-  ];
-  Composite.add(engine.world, walls);
 
   localPlayerData.player1.boundaries = {
-    left: wallW,
-    right: width / 2 - wallW,
+    left: wallW / 2,
+    right: width / 2 - wallW / 2,
   };
   localPlayerData.player2.boundaries = {
-    left: width / 2 + wallW,
-    right: width - wallW,
+    left: width / 2 + wallW / 2,
+    right: width - wallW / 2,
   };
 
   for (const playerKey in localPlayerData) {
     const player = localPlayerData[playerKey];
+    createWalls(player);
     setPlayerData(player);
     player.ball = Bodies.circle(randomPos(player.boundaries), 0, ballRadius, { restitution: 0.7 });
   }
@@ -75,30 +72,10 @@ export function draw() {
 
   Engine.update(engine);
 
-  background(STYLE.background);
-
-  fill(STYLE.player1Color);
-  rect(width / 4, height / 2, width / 2 - wallW, height, 0);
-  fill(STYLE.player2Color);
-  rect((width * 3) / 4, height / 2, width / 2 - wallW, height, 0);
-
-  textFont("Helvetica");
-  textSize(18);
-  textAlign(CENTER);
-  fill("white");
-  text("PLAYER 1", width / 4, 30);
-  text("PLAYER 2", (width * 3) / 4, 30);
-
   for (const playerKey in localPlayerData) {
-    updateState(playerKey);
-    renderTarget(playerKey);
-    renderPlatforms(playerKey);
-    renderBall(playerKey);
-  }
-
-  fill(STYLE.wallColor);
-  for (const wall of walls) {
-    rect(wall.position.x, wall.position.y, wallW, height);
+    const player = localPlayerData[playerKey];
+    updateState(player);
+    renderScene(player);
   }
 }
 
@@ -110,15 +87,15 @@ export function enter() {
 
 export function keyPressed() {
   if (key === "b") {
-    partyEmit("dropBall", { player: currentPlayer.name });
+    partyEmit("dropBall", { player: currentPlayer.key });
   }
 }
 
 export function mousePressed() {
-  if (shared[currentPlayer.name].platforms.length >= maxPlatforms) return;
+  if (shared[currentPlayer.key].platforms.length >= maxPlatforms) return;
   if (mouseX < currentPlayer.boundaries.left || mouseX > currentPlayer.boundaries.right) return;
   partyEmit("addPlatform", {
-    player: currentPlayer.name,
+    player: currentPlayer.key,
     x: mouseX,
     y: mouseY,
   });
@@ -139,11 +116,20 @@ export function onPlatformAdded({ player, x, y }) {
 }
 
 function setPlayerData(player) {
-  shared[player.name] = {
+  shared[player.key] = {
     platforms: [],
     ball: { x: randomPos(player.boundaries), y: 0 },
     target: { x: randomPos(player.boundaries), y: height - targetH / 2 - 10 },
   };
+}
+
+function createWalls(player) {
+  player.walls = [
+    Bodies.rectangle(player.boundaries.left, height / 2, wallW, height, { isStatic: true }),
+    Bodies.rectangle(player.boundaries.right, height / 2, wallW, height, { isStatic: true }),
+  ];
+
+  Composite.add(engine.world, player.walls);
 }
 
 function checkWinner(playerKey) {
@@ -154,52 +140,67 @@ function checkWinner(playerKey) {
   }
 }
 
-function updateState(playerKey) {
-  const player = localPlayerData[playerKey];
+function randomPos(boundaries) {
+  return random(boundaries.left, boundaries.right);
+}
+
+function updateState(player) {
+  if (partyIsHost()) {
+    shared[player.key].ball.x = player.ball.position.x;
+    shared[player.key].ball.y = player.ball.position.y;
+  }
   if (player.ball.position.y > height) {
+    if (partyIsHost()) {
+      if (
+        player.ball.position.x - ballRadius >= shared[player.key].target.x - targetW / 2 &&
+        player.ball.position.x + ballRadius <= shared[player.key].target.x + targetW / 2
+      ) {
+        checkWinner(player.key);
+      }
+      shared[player.key].platforms = [];
+      shared[player.key].target.x = randomPos(player.boundaries);
+    }
     Body.setPosition(player.ball, { x: randomPos(player.boundaries), y: 0 });
     Composite.remove(engine.world, [player.ball]);
     for (const platform of player.platforms) {
       Composite.remove(engine.world, [platform]);
     }
     player.platforms = [];
-    if (partyIsHost()) {
-      shared[playerKey].platforms = [];
-      shared[playerKey].target.x = randomPos(player.boundaries);
-      if (
-        player.ball.position.x >= shared[playerKey].target.x &&
-        player.ball.position.x <= shared[playerKey].target.x + targetW
-      ) {
-        console.log("winner");
-        checkWinner(playerKey);
-      }
-    }
   }
 }
 
-function renderPlatforms(player) {
-  fill(STYLE.platformColor);
-  for (const platform of shared[player].platforms) {
-    rect(platform.x, platform.y, platformW, platformH, platformH / 2);
+function renderScene(player) {
+  const pg = player.pg;
+  const xOffset = player === localPlayerData.player1 ? 0 : width / 2;
+  pg.rectMode(CENTER);
+  pg.noStroke();
+  pg.background(player.color);
+  pg.textFont("Helvetica");
+  pg.textSize(18);
+  pg.textAlign(CENTER);
+  pg.fill("white");
+  pg.text(player.name, pg.width / 2, 30);
+
+  pg.push();
+  pg.translate(-xOffset, 0);
+
+  pg.fill("black");
+  for (const wall of player.walls) {
+    pg.rect(wall.position.x, wall.position.y, wallW, height);
   }
-}
 
-function renderTarget(player) {
-  fill(STYLE.targetColor);
-  rect(shared[player].target.x, shared[player].target.y, targetW, targetH, targetH / 2);
-}
+  pg.fill(STYLE.targetColor);
+  pg.rect(shared[player.key].target.x, shared[player.key].target.y, targetW, targetH, targetH / 2);
 
-function renderBall(playerProperty) {
-  const player = localPlayerData[playerProperty];
-
-  if (partyIsHost()) {
-    shared[playerProperty].ball.x = player.ball.position.x;
-    shared[playerProperty].ball.y = player.ball.position.y;
+  pg.fill(STYLE.platformColor);
+  for (const platform of shared[player.key].platforms) {
+    pg.rect(platform.x, platform.y, platformW, platformH, platformH / 2);
   }
-  fill(STYLE.ballColor);
-  ellipse(shared[playerProperty].ball.x, shared[playerProperty].ball.y, ballRadius * 2);
-}
 
-function randomPos(boundaries) {
-  return random(boundaries.left, boundaries.right);
+  pg.fill(STYLE.ballColor);
+  pg.ellipse(shared[player.key].ball.x, shared[player.key].ball.y, ballRadius * 2);
+
+  pg.pop();
+
+  image(pg, player === localPlayerData.player1 ? 0 : width / 2, 0);
 }

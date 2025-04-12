@@ -69,7 +69,7 @@ window.preload = function () {
 };
 
 window.setup = function () {
-  createCanvas(400, 700);
+  createCanvas(900, 600);
 
   Object.values(scenes).forEach((scene) => {
     if (scene.setup) {
