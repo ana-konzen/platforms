@@ -13,10 +13,10 @@
  *
  */
 
-import * as lobbyScene from "./lobbyScene.js";
-import * as titleScene from "./titleScene.js";
-import * as playScene from "./playScene.js";
-import * as endScene from "./endScene.js";
+import * as lobbyScene from "./scenes/lobbyScene.js";
+import * as titleScene from "./scenes/titleScene.js";
+import * as playScene from "./scenes/playScene.js";
+import * as endScene from "./scenes/endScene.js";
 
 import * as local from "./local.js";
 
