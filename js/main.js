@@ -78,7 +78,7 @@ window.preload = function () {
 };
 
 window.setup = function () {
-  createCanvas(900, 400);
+  createCanvas(900, 700);
 
   local.setup();
 
