@@ -1,5 +1,5 @@
 import { randomPos } from "./util/util.js";
-import { playerData } from "./local.js";
+import { playerData } from "./player.js";
 import { engine, Composite, Body } from "./physics.js";
 import { Platform } from "./platform.js";
 

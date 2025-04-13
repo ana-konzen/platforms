@@ -18,7 +18,7 @@ import * as titleScene from "./scenes/titleScene.js";
 import * as playScene from "./scenes/playScene.js";
 import * as endScene from "./scenes/endScene.js";
 
-import * as local from "./local.js";
+import * as player from "./player.js";
 import * as events from "./events.js";
 
 let currentScene; // the scene being displayed
@@ -63,7 +63,7 @@ window.preload = function () {
 
   events.preload();
 
-  local.preload();
+  player.preload();
 
   // Then preload all scenes
   Object.values(scenes).forEach((scene) => {
@@ -80,7 +80,7 @@ window.preload = function () {
 window.setup = function () {
   createCanvas(900, 700);
 
-  local.setup();
+  player.setup();
 
   Object.values(scenes).forEach((scene) => {
     if (scene.setup) {
