@@ -9,7 +9,6 @@ import { RoleKeeper } from "./util/RoleKeeper.js";
 //config
 const maxPlatforms = 5;
 const wallW = 5;
-const nPlayers = 2;
 
 const renderWalls = false;
 

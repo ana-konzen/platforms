@@ -1,4 +1,5 @@
 export function renderBackground() {
+  noStroke();
   const rectW = 30;
   push();
   rectMode(CORNER);
