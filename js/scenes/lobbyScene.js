@@ -8,8 +8,8 @@ export function preload() {
   shared = partyLoadShared("shared", {
     state: "waiting",
     winner: "",
-    player1: { platforms: [] },
-    player2: { platforms: [] },
+    player1: {},
+    player2: {},
   });
 }
 

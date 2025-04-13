@@ -1,4 +1,4 @@
-import { Bodies, Composite, engine } from "./physics.js";
+import { Bodies, Body, Composite, engine } from "./physics.js";
 import { CONFIG } from "./config.js";
 
 export class Platform {
@@ -49,10 +49,6 @@ export class Platform {
     this.find();
     if (this.found) {
       pg.fill("blue");
-      //   if (mouseIsPressed) {
-      //     this.x = mouseX;
-      //     this.y = mouseY;
-      //   }
     }
   }
 }

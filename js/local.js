@@ -3,8 +3,20 @@ import { CONFIG } from "./config.js";
 import { randomPos } from "./util/util.js";
 
 export const playerData = {
-  player1: { name: "player 1", key: "player1", color: CONFIG.player1Color, platforms: [] },
-  player2: { name: "player 2", key: "player2", color: CONFIG.player2Color, platforms: [] },
+  player1: {
+    name: "player 1",
+    key: "player1",
+    color: CONFIG.player1Color,
+    platforms: [],
+    ballDropped: false,
+  },
+  player2: {
+    name: "player 2",
+    key: "player2",
+    color: CONFIG.player2Color,
+    platforms: [],
+    ballDropped: false,
+  },
 };
 
 const ballOptions = {
@@ -31,7 +43,6 @@ export function setup() {
     const player = playerData[playerKey];
     if (partyIsHost()) {
       shared[playerKey] = {
-        platforms: [],
         ball: { x: randomPos(player.boundaries), y: 0 },
         target: { x: randomPos(player.boundaries), y: height - CONFIG.targetH / 2 - 10 },
         color: player.color,

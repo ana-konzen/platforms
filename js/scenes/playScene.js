@@ -5,6 +5,7 @@ import { playerData } from "../local.js";
 import { Platform } from "../platform.js";
 import { engine, Engine, Composite, Body, Bodies } from "../physics.js";
 import { RoleKeeper } from "../util/RoleKeeper.js";
+import { renderScene } from "../render.js";
 
 let shared;
 
@@ -22,8 +23,7 @@ export function setup() {
   rectMode(CENTER);
 
   for (const playerKey in playerData) {
-    const player = playerData[playerKey];
-    createWalls(player);
+    createWalls(playerData[playerKey]);
   }
 
   localPlayerKey = roleKeeper.myRole();
@@ -34,15 +34,11 @@ export function setup() {
 }
 
 export function update() {
-  const player1 = roleKeeper.guestsWithRole("player1")[0];
-  const player2 = roleKeeper.guestsWithRole("player2")[0];
-
   Engine.update(engine);
 
-  for (const playerKey in playerData) {
-    const player = playerData[playerKey];
-    updateState(player);
-  }
+  updateState();
+  const player1 = roleKeeper.guestsWithRole("player1")[0];
+  const player2 = roleKeeper.guestsWithRole("player2")[0];
 
   if (!player1 || !player2) {
     if (partyIsHost()) {
@@ -60,8 +56,7 @@ export function draw() {
   rectMode(CENTER);
 
   for (const playerKey in playerData) {
-    const player = playerData[playerKey];
-    renderScene(player);
+    renderScene(playerData[playerKey], shared);
   }
 }
 
@@ -71,8 +66,7 @@ export function enter() {
   }
   localPlayerKey = roleKeeper.myRole();
   for (const playerKey in playerData) {
-    const player = playerData[playerKey];
-    resetGame(player);
+    resetGame(playerData[playerKey]);
   }
 }
 
@@ -95,7 +89,8 @@ export function keyPressed() {
 
 export function mousePressed() {
   const player = playerData[localPlayerKey];
-  if (shared[localPlayerKey].platforms.length >= CONFIG.maxPlatforms) return;
+  if (player.platforms.length >= CONFIG.maxPlatforms) return;
+  if (player.ballDropped) return;
   if (mouseX < player.boundaries.left || mouseX > player.boundaries.right) return;
 
   for (const platform of player.platforms) {
@@ -114,6 +109,7 @@ export function mousePressed() {
 
 export function mouseDragged() {
   const player = playerData[localPlayerKey];
+  if (player.ballDropped) return;
   for (const platform of player.platforms) {
     if (platform.found) {
       partyEmit("platformMoved", {
@@ -126,37 +122,34 @@ export function mouseDragged() {
   }
 }
 
-function createWalls(player) {
-  player.walls = [
-    Bodies.rectangle(player.boundaries.left, height / 2, CONFIG.wallW, height, { isStatic: true }),
-    Bodies.rectangle(player.boundaries.right, height / 2, CONFIG.wallW, height, { isStatic: true }),
-  ];
-
-  Composite.add(engine.world, player.walls);
-}
-
-function updateState(player) {
-  if (player.ball.position.y > height) {
-    if (partyIsHost()) {
-      if (
-        player.ball.position.x - CONFIG.ballRadius >= shared[player.key].target.x - CONFIG.targetW / 2 &&
-        player.ball.position.x + CONFIG.ballRadius <= shared[player.key].target.x + CONFIG.targetW / 2
-      ) {
-        checkWinner(player.key);
+function updateState() {
+  for (const playerKey in playerData) {
+    const player = playerData[playerKey];
+    if (player.ball.position.y > height) {
+      if (partyIsHost()) {
+        if (
+          player.ball.position.x - CONFIG.ballRadius >= shared[player.key].target.x - CONFIG.targetW / 2 &&
+          player.ball.position.x + CONFIG.ballRadius <= shared[player.key].target.x + CONFIG.targetW / 2
+        ) {
+          checkWinner(player.key);
+        }
       }
+      resetGame(player);
     }
-    resetGame(player);
   }
 }
 
 function resetGame(player) {
-  if (partyIsHost()) {
+  if (roleKeeper.myRole() === "player1") {
     shared[player.key].ball.x = randomPos(player.boundaries);
     shared[player.key].ball.y = 0;
-    shared[player.key].platforms = [];
     shared[player.key].target.x = randomPos(player.boundaries);
   }
   Body.setPosition(player.ball, { x: shared[player.key].ball.x, y: shared[player.key].ball.y });
+  Body.setVelocity(player.ball, { x: 0, y: 0 });
+  Body.setAngularVelocity(player.ball, 0);
+  Body.setAngle(player.ball, 0);
+  player.ballDropped = false;
   Composite.remove(engine.world, player.ball);
   for (const platform of player.platforms) {
     Composite.remove(engine.world, platform.body);
@@ -171,75 +164,29 @@ function checkWinner(playerKey) {
   shared.status = "end";
 }
 
-function renderScene(player) {
-  const pg = player.pg;
-  const xOffset = player === playerData.player1 ? 0 : width / 2;
-  pg.rectMode(CENTER);
-  pg.noStroke();
-  pg.background(player.color);
-  pg.textFont("Helvetica");
-  pg.textSize(18);
-  pg.textAlign(CENTER);
-  pg.fill("white");
-  pg.text(player.name, pg.width / 2, 30);
-
-  pg.push();
-  pg.translate(-xOffset, 0);
-
-  if (CONFIG.renderWalls) {
-    pg.fill(CONFIG.wallColor);
-    for (const wall of player.walls) {
-      pg.rect(wall.position.x, wall.position.y, CONFIG.wallW, height);
-    }
-  }
-
-  pg.fill(CONFIG.targetColor);
-  pg.rect(
-    shared[player.key].target.x,
-    shared[player.key].target.y,
-    CONFIG.targetW,
-    CONFIG.targetH,
-    CONFIG.targetH / 2
-  );
-
-  pg.fill(CONFIG.platformColor);
-  for (const platform of shared[player.key].platforms) {
-    const localPlatform = playerData[localPlayerKey].platforms.find((p) => p.id === platform.id);
-    pg.push();
-    if (localPlatform) localPlatform.update(pg);
-
-    pg.translate(platform.x, platform.y);
-    pg.rect(0, 0, CONFIG.platformW, CONFIG.platformH, CONFIG.platformH / 2);
-    pg.pop();
-  }
-
-  pg.fill(CONFIG.ballColor);
-  pg.ellipse(player.ball.position.x, player.ball.position.y, CONFIG.ballRadius * 2);
-
-  pg.pop();
-
-  image(pg, player === playerData.player1 ? 0 : width / 2, 0);
-}
-
 function onBallDrop({ player }) {
-  Composite.add(engine.world, [playerData[player].ball]);
+  if (playerData[player].ballDropped) return;
+  playerData[player].ballDropped = true;
+  Composite.add(engine.world, playerData[player].ball);
 }
 
 function onPlatformAdded({ playerKey, x, y, id }) {
   const platform = new Platform(x, y, id);
   playerData[playerKey].platforms.push(platform);
-  console.log(playerData[playerKey].platforms);
-  if (partyIsHost()) shared[playerKey].platforms.push(platform.getShareData());
 }
 
 function onPlatformMoved({ playerKey, x, y, id }) {
-  const localPlatform = playerData[playerKey].platforms.find((p) => p.id === id);
-  const platform = shared[playerKey].platforms.find((p) => p.id === id);
-  if (platform && localPlatform) {
-    localPlatform.move(x, y);
-    if (partyIsHost()) {
-      platform.x = x;
-      platform.y = y;
-    }
+  const platform = playerData[playerKey].platforms.find((p) => p.id === id);
+  if (platform) {
+    platform.move(x, y);
   }
+}
+
+function createWalls(player) {
+  player.walls = [
+    Bodies.rectangle(player.boundaries.left, height / 2, CONFIG.wallW, height, { isStatic: true }),
+    Bodies.rectangle(player.boundaries.right, height / 2, CONFIG.wallW, height, { isStatic: true }),
+  ];
+
+  Composite.add(engine.world, player.walls);
 }
