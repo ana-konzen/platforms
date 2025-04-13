@@ -1,12 +1,10 @@
 import { changeScene, scenes } from "./main.js";
 import { renderBackground } from "./background.js";
 
-let shared, me;
-let bgImage;
+let shared;
 
 export function preload() {
   shared = partyLoadShared("globals");
-  me = partyLoadMyShared();
 }
 
 export function setup() {}

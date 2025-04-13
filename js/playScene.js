@@ -1,16 +1,10 @@
-import { STYLE } from "./style.js";
+import { CONFIG } from "./config.js";
 import { changeScene, scenes } from "./main.js";
 import { makeId, randomPos } from "./util/util.js";
 import { playerData } from "./local.js";
 import { Platform } from "./platform.js";
 import { engine, Engine, Composite, Body, Bodies } from "./physics.js";
 import { RoleKeeper } from "./util/RoleKeeper.js";
-
-//config
-const maxPlatforms = 5;
-const wallW = 5;
-
-const renderWalls = false;
 
 let shared;
 
@@ -84,12 +78,12 @@ export function enter() {
 
 export function windowResized() {
   playerData.player1.boundaries = {
-    left: wallW / 2,
-    right: width / 2 - wallW / 2,
+    left: CONFIG.wallW / 2,
+    right: width / 2 - CONFIG.wallW / 2,
   };
   playerData.player2.boundaries = {
-    left: width / 2 + wallW / 2,
-    right: width - wallW / 2,
+    left: width / 2 + CONFIG.wallW / 2,
+    right: width - CONFIG.wallW / 2,
   };
 }
 
@@ -101,7 +95,7 @@ export function keyPressed() {
 
 export function mousePressed() {
   const player = playerData[localPlayerKey];
-  if (shared[localPlayerKey].platforms.length >= maxPlatforms) return;
+  if (shared[localPlayerKey].platforms.length >= CONFIG.maxPlatforms) return;
   if (mouseX < player.boundaries.left || mouseX > player.boundaries.right) return;
 
   for (const platform of player.platforms) {
@@ -134,8 +128,8 @@ export function mouseDragged() {
 
 function createWalls(player) {
   player.walls = [
-    Bodies.rectangle(player.boundaries.left, height / 2, wallW, height, { isStatic: true }),
-    Bodies.rectangle(player.boundaries.right, height / 2, wallW, height, { isStatic: true }),
+    Bodies.rectangle(player.boundaries.left, height / 2, CONFIG.wallW, height, { isStatic: true }),
+    Bodies.rectangle(player.boundaries.right, height / 2, CONFIG.wallW, height, { isStatic: true }),
   ];
 
   Composite.add(engine.world, player.walls);
@@ -145,8 +139,8 @@ function updateState(player) {
   if (player.ball.position.y > height) {
     if (partyIsHost()) {
       if (
-        player.ball.position.x - STYLE.ballRadius >= shared[player.key].target.x - STYLE.targetW / 2 &&
-        player.ball.position.x + STYLE.ballRadius <= shared[player.key].target.x + STYLE.targetW / 2
+        player.ball.position.x - CONFIG.ballRadius >= shared[player.key].target.x - CONFIG.targetW / 2 &&
+        player.ball.position.x + CONFIG.ballRadius <= shared[player.key].target.x + CONFIG.targetW / 2
       ) {
         checkWinner(player.key);
       }
@@ -192,35 +186,35 @@ function renderScene(player) {
   pg.push();
   pg.translate(-xOffset, 0);
 
-  if (renderWalls) {
-    pg.fill(STYLE.wallColor);
+  if (CONFIG.renderWalls) {
+    pg.fill(CONFIG.wallColor);
     for (const wall of player.walls) {
-      pg.rect(wall.position.x, wall.position.y, wallW, height);
+      pg.rect(wall.position.x, wall.position.y, CONFIG.wallW, height);
     }
   }
 
-  pg.fill(STYLE.targetColor);
+  pg.fill(CONFIG.targetColor);
   pg.rect(
     shared[player.key].target.x,
     shared[player.key].target.y,
-    STYLE.targetW,
-    STYLE.targetH,
-    STYLE.targetH / 2
+    CONFIG.targetW,
+    CONFIG.targetH,
+    CONFIG.targetH / 2
   );
 
-  pg.fill(STYLE.platformColor);
+  pg.fill(CONFIG.platformColor);
   for (const platform of shared[player.key].platforms) {
     const localPlatform = playerData[localPlayerKey].platforms.find((p) => p.id === platform.id);
     pg.push();
     if (localPlatform) localPlatform.update(pg);
 
     pg.translate(platform.x, platform.y);
-    pg.rect(0, 0, STYLE.platformW, STYLE.platformH, STYLE.platformH / 2);
+    pg.rect(0, 0, CONFIG.platformW, CONFIG.platformH, CONFIG.platformH / 2);
     pg.pop();
   }
 
-  pg.fill(STYLE.ballColor);
-  pg.ellipse(player.ball.position.x, player.ball.position.y, STYLE.ballRadius * 2);
+  pg.fill(CONFIG.ballColor);
+  pg.ellipse(player.ball.position.x, player.ball.position.y, CONFIG.ballRadius * 2);
 
   pg.pop();
 

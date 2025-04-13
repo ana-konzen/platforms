@@ -1,4 +1,4 @@
-export const STYLE = {
+export const CONFIG = {
   background: "#f7f7ed",
   targetColor: "#B2D89E",
   wallColor: "#C8121D",
@@ -17,4 +17,7 @@ export const STYLE = {
   ballRadius: 10,
 
   wallW: 5,
+
+  maxPlatforms: 5,
+  renderWalls: false,
 };

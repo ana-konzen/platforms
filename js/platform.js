@@ -1,12 +1,14 @@
 import { Bodies, Composite, engine } from "./physics.js";
-import { STYLE } from "./style.js";
+import { CONFIG } from "./config.js";
 
 export class Platform {
   constructor(x, y, id) {
     this.x = x;
     this.y = y;
     this.angle = 0;
-    this.body = Bodies.rectangle(x, y, STYLE.platformW, STYLE.platformH, {
+    this.w = CONFIG.platformW;
+    this.h = CONFIG.platformH;
+    this.body = Bodies.rectangle(x, y, this.w, this.h, {
       isStatic: true,
     });
     this.found = false;
@@ -26,10 +28,10 @@ export class Platform {
 
   findPlatform() {
     if (
-      mouseX > this.x - STYLE.platformW / 2 &&
-      mouseX < this.x + STYLE.platformW / 2 &&
-      mouseY > this.y - STYLE.platformH / 2 &&
-      mouseY < this.y + STYLE.platformH / 2
+      mouseX > this.x - this.w / 2 &&
+      mouseX < this.x + this.w / 2 &&
+      mouseY > this.y - this.h / 2 &&
+      mouseY < this.y + this.h / 2
     ) {
       this.found = true;
     } else {
