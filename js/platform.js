@@ -24,8 +24,27 @@ export class Platform {
     };
   }
 
-  changePlatColor(pg) {
-    pg.fill("blue");
-    // if (this.found) pg.fill(STYLE.platformFoundColor);
+  findPlatform() {
+    if (
+      mouseX > this.x - STYLE.platformW / 2 &&
+      mouseX < this.x + STYLE.platformW / 2 &&
+      mouseY > this.y - STYLE.platformH / 2 &&
+      mouseY < this.y + STYLE.platformH / 2
+    ) {
+      this.found = true;
+    } else {
+      this.found = false;
+    }
+  }
+
+  update(pg) {
+    this.findPlatform();
+    if (this.found) {
+      pg.fill("blue");
+      //   if (mouseIsPressed) {
+      //     this.x = mouseX;
+      //     this.y = mouseY;
+      //   }
+    }
   }
 }
