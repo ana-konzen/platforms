@@ -19,6 +19,7 @@ import * as playScene from "./scenes/playScene.js";
 import * as endScene from "./scenes/endScene.js";
 
 import * as local from "./local.js";
+import * as events from "./events.js";
 
 let currentScene; // the scene being displayed
 let partyInitialized = false;
@@ -60,6 +61,8 @@ window.preload = function () {
   // Initialize p5.party first
   initializeParty();
 
+  events.preload();
+
   local.preload();
 
   // Then preload all scenes
@@ -89,6 +92,7 @@ window.setup = function () {
     }
   });
   changeScene(scenes.title);
+  events.setup();
 };
 
 window.draw = function () {
