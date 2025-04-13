@@ -32,7 +32,7 @@ export class Platform {
     Body.setPosition(this.body, { x: this.x, y: this.y });
   }
 
-  findPlatform() {
+  find() {
     if (
       mouseX > this.x - this.w / 2 &&
       mouseX < this.x + this.w / 2 &&
@@ -46,7 +46,7 @@ export class Platform {
   }
 
   update(pg) {
-    this.findPlatform();
+    this.find();
     if (this.found) {
       pg.fill("blue");
       //   if (mouseIsPressed) {
