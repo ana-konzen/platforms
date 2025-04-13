@@ -30,9 +30,6 @@ export function update() {
 }
 
 export function mousePressed() {
-  const player1 = roleKeeper.guestsWithRole("player1")[0];
-  const player2 = roleKeeper.guestsWithRole("player2")[0];
-
   if (mouseX < width * 0.5) {
     if (roleKeeper.myRole() === "player1") {
       roleKeeper.requestRole("unassigned");
@@ -47,7 +44,11 @@ export function mousePressed() {
       roleKeeper.requestRole("player2");
     }
   }
+}
 
+export function keyPressed() {
+  const player1 = roleKeeper.guestsWithRole("player1")[0];
+  const player2 = roleKeeper.guestsWithRole("player2")[0];
   if (roleKeeper.myRole() === "player1" && player1 && player2) {
     shared.status = "playing";
   }
@@ -102,7 +103,7 @@ export function draw() {
   let startText = "waiting for players..";
   if (player1 && player2) {
     if (roleKeeper.myRole() === "player1") {
-      startText = "click to start the game";
+      startText = "press any key to start the game";
     } else {
       startText = "waiting for player 1 to start the game";
     }
