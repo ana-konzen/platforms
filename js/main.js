@@ -13,9 +13,12 @@
  *
  */
 
+import * as lobbyScene from "./lobbyScene.js";
 import * as titleScene from "./titleScene.js";
 import * as playScene from "./playScene.js";
 import * as endScene from "./endScene.js";
+
+import * as local from "./local.js";
 
 let currentScene; // the scene being displayed
 let partyInitialized = false;
@@ -23,6 +26,7 @@ let partyInitialized = false;
 // all the available scenes
 export const scenes = {
   title: titleScene,
+  lobby: lobbyScene,
   play: playScene,
   end: endScene,
 };
@@ -33,7 +37,7 @@ export function initializeParty() {
     try {
       // Only connect if not already connected
       if (!window.partyIsConnected?.()) {
-        partyConnect("wss://demoserver.p5party.org", "ana_danit_fiona");
+        partyConnect("wss://demoserver.p5party.org", "ana_danit_fiona_test");
         console.log("p5.party initialized");
       } else {
         console.log("p5.party already connected");
@@ -56,6 +60,8 @@ window.preload = function () {
   // Initialize p5.party first
   initializeParty();
 
+  local.preload();
+
   // Then preload all scenes
   Object.values(scenes).forEach((scene) => {
     if (scene.preload) {
@@ -69,7 +75,9 @@ window.preload = function () {
 };
 
 window.setup = function () {
-  createCanvas(1200, 700);
+  createCanvas(900, 400);
+
+  local.setup();
 
   Object.values(scenes).forEach((scene) => {
     if (scene.setup) {
@@ -114,6 +122,9 @@ const p5Events = [
   "touchMoved",
   "touchStarted",
   "touchEnded",
+
+  // window
+  "windowResized",
 ];
 
 for (const event of p5Events) {
