@@ -1,10 +1,10 @@
-import { CONFIG } from "./config.js";
-import { changeScene, scenes } from "./main.js";
-import { makeId, randomPos } from "./util/util.js";
-import { playerData } from "./local.js";
-import { Platform } from "./platform.js";
-import { engine, Engine, Composite, Body, Bodies } from "./physics.js";
-import { RoleKeeper } from "./util/RoleKeeper.js";
+import { CONFIG } from "../config.js";
+import { changeScene, scenes } from "../main.js";
+import { makeId, randomPos } from "../util/util.js";
+import { playerData } from "../local.js";
+import { Platform } from "../platform.js";
+import { engine, Engine, Composite, Body, Bodies } from "../physics.js";
+import { RoleKeeper } from "../util/RoleKeeper.js";
 
 let shared;
 

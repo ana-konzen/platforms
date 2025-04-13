@@ -1,5 +1,5 @@
-import { changeScene, scenes } from "./main.js";
-import { renderBackground } from "./background.js";
+import { changeScene, scenes } from "../main.js";
+import { renderBackground } from "../background.js";
 
 export function mousePressed() {
   changeScene(scenes.lobby);
