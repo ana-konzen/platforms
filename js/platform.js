@@ -26,6 +26,12 @@ export class Platform {
     };
   }
 
+  move(x, y) {
+    this.x = x;
+    this.y = y;
+    Body.setPosition(this.body, { x: this.x, y: this.y });
+  }
+
   findPlatform() {
     if (
       mouseX > this.x - this.w / 2 &&

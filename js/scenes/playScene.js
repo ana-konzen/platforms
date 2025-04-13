@@ -235,12 +235,10 @@ function onPlatformMoved({ playerKey, x, y, id }) {
   const localPlatform = playerData[playerKey].platforms.find((p) => p.id === id);
   const platform = shared[playerKey].platforms.find((p) => p.id === id);
   if (platform && localPlatform) {
-    localPlatform.x = x;
-    localPlatform.y = y;
-    Body.setPosition(localPlatform.body, { x: x, y: y });
+    localPlatform.move(x, y);
     if (partyIsHost()) {
-      platform.x = localPlatform.x;
-      platform.y = localPlatform.y;
+      platform.x = x;
+      platform.y = y;
     }
   }
 }
