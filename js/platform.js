@@ -13,6 +13,7 @@ export class Platform {
     });
     this.found = false;
     this.id = id;
+    this.selected = true;
 
     Composite.add(engine.world, this.body);
   }
@@ -32,12 +33,18 @@ export class Platform {
     Body.setPosition(this.body, { x: this.x, y: this.y });
   }
 
+  rotate(angle) {
+    this.angle += angle;
+    Body.setAngle(this.body, this.angle);
+    console.log(this.body);
+  }
+
   find() {
     if (
-      mouseX > this.x - this.w / 2 &&
-      mouseX < this.x + this.w / 2 &&
-      mouseY > this.y - this.h / 2 &&
-      mouseY < this.y + this.h / 2
+      mouseX > this.x - this.h / 2 - (this.w / 2) * abs(cos(this.angle)) &&
+      mouseX < this.x + this.h / 2 + (this.w / 2) * abs(cos(this.angle)) &&
+      mouseY > this.y - this.h / 2 - (this.w / 2) * abs(sin(this.angle)) &&
+      mouseY < this.y + this.h / 2 + (this.w / 2) * abs(sin(this.angle))
     ) {
       this.found = true;
     } else {
@@ -45,10 +52,17 @@ export class Platform {
     }
   }
 
-  update(pg) {
-    this.find();
-    if (this.found) {
-      pg.fill("blue");
+  draw(pg, ballDropped) {
+    pg.push();
+    if (!ballDropped) {
+      this.find();
+      if (this.found || this.selected) {
+        pg.fill("blue");
+      }
     }
+    pg.translate(this.x, this.y);
+    pg.rotate(this.angle);
+    pg.rect(0, 0, this.w, this.h, this.h / 2);
+    pg.pop();
   }
 }

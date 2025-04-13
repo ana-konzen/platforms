@@ -13,6 +13,8 @@ export function setup() {
   partySubscribe("dropBall", onBallDrop);
   partySubscribe("addPlatform", onPlatformAdded);
   partySubscribe("platformMoved", onPlatformMoved);
+  partySubscribe("platformRotated", onPlatformRotated);
+
   partySubscribe("hostReset", onHostReset);
   partySubscribe("playerReset", onPlayerReset);
 }
@@ -63,5 +65,12 @@ function onPlatformMoved({ playerKey, x, y, id }) {
   const platform = playerData[playerKey].platforms.find((p) => p.id === id);
   if (platform) {
     platform.move(x, y);
+  }
+}
+
+function onPlatformRotated({ playerKey, id, angle }) {
+  const platform = playerData[playerKey].platforms.find((p) => p.id === id);
+  if (platform) {
+    platform.rotate(angle);
   }
 }

@@ -22,7 +22,16 @@ export function setup() {
   rectMode(CENTER);
 
   for (const playerKey in playerData) {
+    const player = playerData[playerKey];
     createWalls(playerData[playerKey]);
+    const resetButton = createButton("Reset");
+    const buttonX = playerKey === "player1" ? 50 : width - 50;
+    resetButton.position(buttonX, 10);
+    resetButton.addClass("resetButton");
+    resetButton.mousePressed(() => {
+      partyEmit("hostReset", { playerKey });
+    });
+    resetButton.style("display", "none");
   }
 
   localPlayerKey = roleKeeper.myRole();
@@ -65,33 +74,64 @@ export function enter() {
       partyEmit("hostReset", { playerKey });
     }
   }
+
+  const resetButtons = selectAll(".resetButton");
+  for (const button of resetButtons) {
+    button.style("display", "block");
+  }
 }
 
-export function windowResized() {
-  playerData.player1.boundaries = {
-    left: CONFIG.wallW / 2,
-    right: width / 2 - CONFIG.wallW / 2,
-  };
-  playerData.player2.boundaries = {
-    left: width / 2 + CONFIG.wallW / 2,
-    right: width - CONFIG.wallW / 2,
-  };
+export function exit() {
+  const resetButtons = selectAll(".resetButton");
+  for (const button of resetButtons) {
+    button.style("display", "none");
+  }
 }
 
 export function keyPressed() {
+  const player = playerData[localPlayerKey];
   if (key === "b") {
+    for (const platform of player.platforms) {
+      platform.selected = false;
+    }
     partyEmit("dropBall", { player: localPlayerKey });
+  }
+  if (keyCode === LEFT_ARROW) {
+    for (const platform of player.platforms) {
+      if (platform.selected) {
+        partyEmit("platformRotated", {
+          playerKey: localPlayerKey,
+          angle: -0.1,
+          id: platform.id,
+        });
+      }
+    }
+  }
+  if (keyCode === RIGHT_ARROW) {
+    for (const platform of player.platforms) {
+      if (platform.selected) {
+        partyEmit("platformRotated", {
+          playerKey: localPlayerKey,
+          angle: 0.1,
+          id: platform.id,
+        });
+      }
+    }
   }
 }
 
 export function mousePressed() {
   const player = playerData[localPlayerKey];
+  for (const platform of player.platforms) {
+    platform.selected = false;
+  }
   if (player.platforms.length >= CONFIG.maxPlatforms) return;
   if (player.ballDropped) return;
   if (mouseX < player.boundaries.left || mouseX > player.boundaries.right) return;
 
   for (const platform of player.platforms) {
     if (platform.found) {
+      platform.selected = true;
       return;
     }
   }

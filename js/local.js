@@ -50,7 +50,5 @@ export function setup() {
     }
     player.ball = Bodies.circle(shared[playerKey].ball.x, 0, CONFIG.ballRadius, ballOptions);
     player.pg = createGraphics(width / 2, height);
-    console.log(shared[playerKey].ball.x);
-    console.log(player.ball.position.x);
   }
 }

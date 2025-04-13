@@ -33,11 +33,7 @@ export function renderScene(player, shared) {
 
   pg.fill(CONFIG.platformColor);
   for (const platform of player.platforms) {
-    pg.push();
-    platform.update(pg);
-    pg.translate(platform.x, platform.y);
-    pg.rect(0, 0, CONFIG.platformW, CONFIG.platformH, CONFIG.platformH / 2);
-    pg.pop();
+    platform.draw(pg, player.ballDropped);
   }
 
   pg.fill(CONFIG.ballColor);
