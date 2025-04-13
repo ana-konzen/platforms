@@ -228,6 +228,7 @@ function onBallDrop({ player }) {
 function onPlatformAdded({ playerKey, x, y, id }) {
   const platform = new Platform(x, y, id);
   playerData[playerKey].platforms.push(platform);
+  console.log(playerData[playerKey].platforms);
   if (partyIsHost()) shared[playerKey].platforms.push(platform.getShareData());
 }
 
