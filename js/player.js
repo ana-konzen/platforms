@@ -39,16 +39,18 @@ export function setup() {
     right: width - CONFIG.wallW / 2,
   };
 
+  const headerHeight = 40; // Match the header height in playScene.js
+
   for (const playerKey in playerData) {
     const player = playerData[playerKey];
     if (partyIsHost()) {
       shared[playerKey] = {
-        ball: { x: randomPos(player.boundaries), y: 0 },
+        ball: { x: randomPos(player.boundaries), y: headerHeight },
         target: { x: randomPos(player.boundaries), y: height - CONFIG.targetH / 2 - 10 },
         color: player.color,
       };
     }
-    player.ball = Bodies.circle(shared[playerKey].ball.x, 0, CONFIG.ballRadius, ballOptions);
+    player.ball = Bodies.circle(shared[playerKey].ball.x, headerHeight, CONFIG.ballRadius, ballOptions);
     player.pg = createGraphics(width / 2, height);
   }
 }

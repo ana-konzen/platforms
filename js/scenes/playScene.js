@@ -62,6 +62,25 @@ export function draw() {
   for (const playerKey in playerData) {
     renderScene(playerData[playerKey], shared);
   }
+
+  push();
+  fill(0);
+  noStroke();
+  const headerHeight = 40;
+  rect(width/2, headerHeight/2, width, headerHeight);
+  
+  textFont("Helvetica");
+  textSize(16);
+  textAlign(LEFT, CENTER);
+  fill("#FFFDD0");
+  text(playerData.player1.name.toUpperCase(), 20, headerHeight/2);
+  
+  textAlign(RIGHT, CENTER);
+  text(playerData.player2.name.toUpperCase(), width - 20, headerHeight/2);
+  
+  textAlign(CENTER, CENTER);
+  text("LEVEL 1", width/2, headerHeight/2);
+  pop();
 }
 
 export function enter() {

@@ -1,10 +1,21 @@
 body {
   margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #000000;
 }
 
 canvas {
   display: block;
-  position: relative;
   margin: auto;
-  top: 20px;
+  border: 2px solid #FFFDD0;
+}
+
+.welcome-text {
+  font-family: Helvetica;
+  font-size: 30px;
+  margin-bottom: 20px;
+  color: #FFFDD0;
 }

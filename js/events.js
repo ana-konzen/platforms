@@ -23,12 +23,13 @@ function onHostReset({ playerKey }) {
   if (!partyIsHost()) return;
 
   const player = playerData[playerKey];
+  const headerHeight = 40; // Match the header height in playScene.js
 
   shared[playerKey].ball.x = randomPos(player.boundaries);
-  shared[playerKey].ball.y = 0;
+  shared[playerKey].ball.y = headerHeight;
   shared[playerKey].target.x = randomPos(player.boundaries);
 
-  partyEmit("playerReset", { playerKey, ballX: shared[playerKey].ball.x, ballY: 0 });
+  partyEmit("playerReset", { playerKey, ballX: shared[playerKey].ball.x, ballY: headerHeight });
 }
 
 function onPlayerReset({ playerKey, ballX, ballY }) {
