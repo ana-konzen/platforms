@@ -7,15 +7,126 @@ body {
   background-color: #000000;
 }
 
+@font-face {
+  font-family: "Television";
+  src: url("NeueTelevisionS-BlackW50P0.otf") format("opentype");
+}
+
 canvas {
   display: block;
   margin: auto;
-  border: 2px solid #FFFDD0;
+  border: 2px solid #fffdd0;
 }
 
 .welcome-text {
-  font-family: Helvetica;
+  font-family: "Television";
   font-size: 30px;
   margin-bottom: 20px;
-  color: #FFFDD0;
+  color: #fffdd0;
+}
+
+.game-title {
+  font-family: "Television";
+  font-size: 100px;
+  text-align: center;
+  color: #fffdd0;
+}
+
+.player-name {
+  font-size: 30px;
+  text-align: center;
+  color: #fffdd0;
+}
+
+.status-text {
+  font-size: 20px;
+  text-align: center;
+  color: #fffdd0;
+}
+
+.small-text {
+  font-size: 16px;
+  text-align: center;
+  color: #fffdd0;
+}
+
+.instruction-text {
+  font-size: 18px;
+  font-family: Helvetica;
+  text-align: center;
+  color: #fffdd0;
+  margin-bottom: 10px;
+}
+
+.close-button {
+  font-size: 16px;
+  color: #fffdd0;
+  cursor: pointer;
+}
+
+.welcome-text {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.name-input-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 200px;
+  background-color: black;
+  border: 2px solid #fffdd0;
+  border-radius: 10px;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  z-index: 1000;
+  padding: 20px;
+}
+
+#nameInput {
+  width: 200px;
+  height: 30px;
+  font-size: 16px;
+  text-align: center;
+  background-color: black;
+  border: 1px solid #fffdd0;
+  color: #fffdd0;
+  outline: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  transition: border-color 0.3s ease;
+}
+
+#nameInput:focus {
+  border-color: #fffdd0;
+  border-width: 2px;
+}
+
+#nameInput::placeholder {
+  color: rgba(255, 253, 208, 0.5);
+}
+
+.submit-button {
+  font-family: "Television";
+
+  background-color: transparent;
+  border: 1px solid #fffdd0;
+  color: #fffdd0;
+  padding: 8px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 5px;
+}
+
+.submit-button:hover {
+  background-color: #fffdd0;
+  color: black;
 }
