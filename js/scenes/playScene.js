@@ -12,6 +12,10 @@ let localPlayerKey;
 
 export let roleKeeper;
 
+let showInstructions = true;
+let instructionsAnimStartTime;
+const instructionsAnimDuration = 500;
+
 export function preload() {
   shared = partyLoadShared("globals");
   roleKeeper = new RoleKeeper(["player1", "player2"], "unassigned");
@@ -81,6 +85,8 @@ export function draw() {
   textAlign(CENTER, CENTER);
   text("LEVEL 1", width/2, headerHeight/2);
   pop();
+  
+  drawInstructions();
 }
 
 export function enter() {
@@ -98,6 +104,9 @@ export function enter() {
   for (const button of resetButtons) {
     button.style("display", "block");
   }
+  
+  showInstructions = true;
+  instructionsAnimStartTime = millis();
 }
 
 export function exit() {
@@ -187,7 +196,7 @@ function updateState() {
           player.ball.position.x - CONFIG.ballRadius >= shared[player.key].target.x - CONFIG.targetW / 2 &&
           player.ball.position.x + CONFIG.ballRadius <= shared[player.key].target.x + CONFIG.targetW / 2
         ) {
-          shared.winner = player.key;
+          shared.winner = player.name;
           shared.status = "end";
         }
         partyEmit("hostReset", { playerKey });
@@ -203,4 +212,49 @@ function createWalls(player) {
   ];
 
   Composite.add(engine.world, player.walls);
+}
+
+function drawInstructions() {
+  if (!showInstructions) return;
+  
+  const currentTime = millis() - instructionsAnimStartTime;
+  const progress = constrain(currentTime / instructionsAnimDuration, 0, 1);
+  const easedProgress = 1 - pow(1 - progress, 3);
+  
+  push();
+  fill(0, 0, 0, 200);
+  noStroke();
+  rect(width/2, height/2, width * easedProgress, height * easedProgress);
+  
+  if (progress === 1) {
+    fill("#FFFDD0");
+    textAlign(CENTER, CENTER);
+    textSize(24);
+    text("HOW TO PLAY", width/2, height/2 - 100);
+    
+    textSize(16);
+    text("CLICK AND DRAG TO PLACE PLATFORMS", width/2, height/2 - 40);
+    text("USE ARROW KEYS TO ROTATE PLATFORMS", width/2, height/2);
+    text("PRESS 'B' TO DROP THE BALL", width/2, height/2 + 40);
+    text("ADVANCE TO NEXT LEVEL ONCE BALL HITS TARGET", width/2, height/2 + 80);
+    
+    // Draw X button
+    const buttonX = width/2 + 200;
+    const buttonY = height/2 - 100;
+    const buttonRadius = 15;
+    const xSize = 8;
+    
+    stroke("#FFFDD0");
+    strokeWeight(2);
+    noFill();
+    circle(buttonX, buttonY, buttonRadius * 2);
+    line(buttonX - xSize, buttonY - xSize, buttonX + xSize, buttonY + xSize);
+    line(buttonX - xSize, buttonY + xSize, buttonX + xSize, buttonY - xSize);
+    
+    if (mouseIsPressed &&
+        dist(mouseX, mouseY, buttonX, buttonY) < buttonRadius) {
+      showInstructions = false;
+    }
+  }
+  pop();
 }

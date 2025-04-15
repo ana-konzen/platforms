@@ -26,6 +26,8 @@ export function preload() {
     winner: "",
     player1: { name: "" },
     player2: { name: "" },
+    exitAnimationStarted: false,
+    exitAnimationStartTime: 0
   });
 }
 
@@ -108,8 +110,8 @@ export function update() {
   playerData.player1.name = shared.player1.name;
   playerData.player2.name = shared.player2.name;
   
-  if (player1 && player2 && exitAnimationStarted) {
-    const currentTime = millis() - exitAnimationStartTime;
+  if (player1 && player2 && shared.exitAnimationStarted) {
+    const currentTime = millis() - shared.exitAnimationStartTime;
     if (currentTime >= exitAnimationDuration + exitDelay) {
       shared.status = "playing";
       changeScene(scenes.play);
@@ -187,9 +189,9 @@ export function mousePressed() {
 export function keyPressed() {
   const player1 = roleKeeper.guestsWithRole("player1")[0];
   const player2 = roleKeeper.guestsWithRole("player2")[0];
-  if (roleKeeper.myRole() === "player1" && player1 && player2 && !exitAnimationStarted) {
-    exitAnimationStarted = true;
-    exitAnimationStartTime = millis();
+  if (roleKeeper.myRole() === "player1" && player1 && player2 && !shared.exitAnimationStarted) {
+    shared.exitAnimationStarted = true;
+    shared.exitAnimationStartTime = millis();
   }
 }
 
@@ -257,11 +259,11 @@ export function draw() {
   textSize(100);
   fill("#FFFDD0");
   
-  if (!exitAnimationStarted) {
+  if (!shared.exitAnimationStarted) {
     text("PLAT", width / 2, height / 5);
     text("FORMS", width/1.5, height / 2.7);
   } else {
-    const currentTime = millis() - exitAnimationStartTime;
+    const currentTime = millis() - shared.exitAnimationStartTime;
     
     const platTime = currentTime;
     const platProgress = constrain(platTime / exitAnimationDuration, 0, 1);
