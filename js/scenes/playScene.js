@@ -16,10 +16,14 @@ let showInstructions = true;
 let instructionsAnimStartTime;
 const instructionsAnimDuration = 500;
 
+let player1font, player2font;
+
 export function preload() {
   shared = partyLoadShared("globals");
   roleKeeper = new RoleKeeper(["player1", "player2"], "unassigned");
   roleKeeper.setAutoAssign(false);
+  player1font = loadFont("../../NeueTelevisionS-BlackW50P0.otf");
+  player2font = loadFont("../../NeueTelevisionS-BlackW50P50.otf");
 }
 
 export function setup() {
@@ -71,21 +75,22 @@ export function draw() {
   fill(0);
   noStroke();
   const headerHeight = 40;
-  rect(width/2, headerHeight/2, width, headerHeight);
-  
-  textFont("Helvetica");
+  rect(width / 2, headerHeight / 2, width, headerHeight);
+
+  textFont(player1font);
   textSize(16);
   textAlign(LEFT, CENTER);
   fill("#FFFDD0");
-  text(playerData.player1.name.toUpperCase(), 20, headerHeight/2);
-  
+  text(playerData.player1.name.toUpperCase(), 20, headerHeight / 2);
+
+  textFont(player2font);
   textAlign(RIGHT, CENTER);
-  text(playerData.player2.name.toUpperCase(), width - 20, headerHeight/2);
-  
+  text(playerData.player2.name.toUpperCase(), width - 20, headerHeight / 2);
+
   textAlign(CENTER, CENTER);
-  text("LEVEL 1", width/2, headerHeight/2);
+  text("LEVEL 1", width / 2, headerHeight / 2);
   pop();
-  
+
   drawInstructions();
 }
 
@@ -104,7 +109,7 @@ export function enter() {
   for (const button of resetButtons) {
     button.style("display", "block");
   }
-  
+
   showInstructions = true;
   instructionsAnimStartTime = millis();
 }
@@ -216,43 +221,42 @@ function createWalls(player) {
 
 function drawInstructions() {
   if (!showInstructions) return;
-  
+
   const currentTime = millis() - instructionsAnimStartTime;
   const progress = constrain(currentTime / instructionsAnimDuration, 0, 1);
   const easedProgress = 1 - pow(1 - progress, 3);
-  
+
   push();
   fill(0, 0, 0, 200);
   noStroke();
-  rect(width/2, height/2, width * easedProgress, height * easedProgress);
-  
+  rect(width / 2, height / 2, width * easedProgress, height * easedProgress);
+
   if (progress === 1) {
     fill("#FFFDD0");
     textAlign(CENTER, CENTER);
     textSize(24);
-    text("HOW TO PLAY", width/2, height/2 - 100);
-    
+    text("HOW TO PLAY", width / 2, height / 2 - 100);
+
     textSize(16);
-    text("CLICK AND DRAG TO PLACE PLATFORMS", width/2, height/2 - 40);
-    text("USE ARROW KEYS TO ROTATE PLATFORMS", width/2, height/2);
-    text("PRESS 'B' TO DROP THE BALL", width/2, height/2 + 40);
-    text("ADVANCE TO NEXT LEVEL ONCE BALL HITS TARGET", width/2, height/2 + 80);
-    
+    text("CLICK AND DRAG TO PLACE PLATFORMS", width / 2, height / 2 - 40);
+    text("USE ARROW KEYS TO ROTATE PLATFORMS", width / 2, height / 2);
+    text("PRESS 'B' TO DROP THE BALL", width / 2, height / 2 + 40);
+    text("ADVANCE TO NEXT LEVEL ONCE BALL HITS TARGET", width / 2, height / 2 + 80);
+
     // Draw X button
-    const buttonX = width/2 + 200;
-    const buttonY = height/2 - 100;
+    const buttonX = width / 2 + 200;
+    const buttonY = height / 2 - 100;
     const buttonRadius = 15;
     const xSize = 8;
-    
+
     stroke("#FFFDD0");
     strokeWeight(2);
     noFill();
     circle(buttonX, buttonY, buttonRadius * 2);
     line(buttonX - xSize, buttonY - xSize, buttonX + xSize, buttonY + xSize);
     line(buttonX - xSize, buttonY + xSize, buttonX + xSize, buttonY - xSize);
-    
-    if (mouseIsPressed &&
-        dist(mouseX, mouseY, buttonX, buttonY) < buttonRadius) {
+
+    if (mouseIsPressed && dist(mouseX, mouseY, buttonX, buttonY) < buttonRadius) {
       showInstructions = false;
     }
   }
