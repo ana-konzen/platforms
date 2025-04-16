@@ -56,6 +56,9 @@ export function update() {
     if (partyIsHost()) {
       shared.status = "waiting";
     }
+  }
+
+  if (shared.status === "waiting") {
     changeScene(scenes.title);
   }
 
