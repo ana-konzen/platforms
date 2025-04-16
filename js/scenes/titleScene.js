@@ -19,9 +19,9 @@ export function mousePressed() {
 }
 
 export function preload() {
-  platFont = loadFont("../../NeueTelevision-RetroUltraBoldW50P0.otf");
-  formsFont = loadFont("../../NeueTelevision-RetroUltraBoldW50P50.otf");
-  basicFont = loadFont("../../NeueTelevisionS-BlackW50P50.otf");
+  platFont = loadFont("../../fonts/NeueTelevision-RetroUltraBoldW50P0.otf");
+  formsFont = loadFont("../../fonts/NeueTelevision-RetroUltraBoldW50P50.otf");
+  basicFont = loadFont("../../fonts/NeueTelevisionS-BlackW50P50.otf");
 }
 
 export function draw() {

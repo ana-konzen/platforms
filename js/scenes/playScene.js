@@ -22,8 +22,8 @@ export function preload() {
   shared = partyLoadShared("globals");
   roleKeeper = new RoleKeeper(["player1", "player2"], "unassigned");
   roleKeeper.setAutoAssign(false);
-  player1font = loadFont("../../NeueTelevisionS-BlackW50P0.otf");
-  player2font = loadFont("../../NeueTelevisionS-BlackW50P50.otf");
+  player1font = loadFont("../../fonts/NeueTelevisionS-BlackW50P0.otf");
+  player2font = loadFont("../../fonts/NeueTelevisionS-BlackW50P50.otf");
 }
 
 export function setup() {
