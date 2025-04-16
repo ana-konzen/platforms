@@ -1,6 +1,7 @@
 import { Bodies } from "./physics.js";
 import { CONFIG } from "./config.js";
 import { randomPos } from "./util/util.js";
+import { shared } from "./scenes/lobbyScene.js";
 
 export const playerData = {
   player1: {
@@ -9,6 +10,7 @@ export const playerData = {
     color: CONFIG.player1Color,
     platforms: [],
     ballDropped: false,
+    level: 1,
   },
   player2: {
     name: "player 2",
@@ -16,18 +18,13 @@ export const playerData = {
     color: CONFIG.player2Color,
     platforms: [],
     ballDropped: false,
+    level: 1,
   },
 };
 
 const ballOptions = {
   restitution: 0.7,
 };
-
-let shared;
-
-export function preload() {
-  shared = partyLoadShared("globals");
-}
 
 export function setup() {
   playerData.player1.boundaries = {
@@ -50,7 +47,7 @@ export function setup() {
         color: player.color,
       };
     }
-    player.ball = Bodies.circle(shared[playerKey].ball.x, headerHeight, CONFIG.ballRadius, ballOptions);
+    player.ball = Bodies.circle(shared[playerKey]?.ball?.x, headerHeight, CONFIG.ballRadius, ballOptions);
     player.pg = createGraphics(width / 2, height);
   }
 }

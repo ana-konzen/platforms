@@ -1,12 +1,11 @@
 import { CONFIG } from "../config.js";
 import { changeScene, scenes } from "../main.js";
-import { makeId } from "../util/util.js";
+import { makeId, getLevelName } from "../util/util.js";
 import { playerData } from "../player.js";
 import { engine, Engine, Composite, Bodies } from "../physics.js";
 import { RoleKeeper } from "../util/RoleKeeper.js";
 import { renderScene } from "../render.js";
-
-let shared;
+import { shared } from "./lobbyScene.js";
 
 let localPlayerKey;
 
@@ -19,7 +18,6 @@ const instructionsAnimDuration = 500;
 let player1font, player2font;
 
 export function preload() {
-  shared = partyLoadShared("globals");
   roleKeeper = new RoleKeeper(["player1", "player2"], "unassigned");
   roleKeeper.setAutoAssign(false);
   player1font = loadFont("../../fonts/NeueTelevisionS-BlackW50P0.otf");
@@ -27,11 +25,7 @@ export function preload() {
 }
 
 export function setup() {
-  rectMode(CENTER);
-
   for (const playerKey in playerData) {
-    const player = playerData[playerKey];
-    createWalls(playerData[playerKey]);
     const resetButton = createButton("Reset");
     const buttonX = playerKey === "player1" ? 50 : width - 50;
     resetButton.position(buttonX, 10);
@@ -39,16 +33,12 @@ export function setup() {
     resetButton.mousePressed(() => {
       partyEmit("hostReset", { playerKey });
     });
-    resetButton.style("display", "none");
   }
 
-  localPlayerKey = roleKeeper.myRole();
+  rectMode(CENTER);
 }
 
 export function update() {
-  Engine.update(engine);
-
-  updateState();
   const player1 = roleKeeper.guestsWithRole("player1")[0];
   const player2 = roleKeeper.guestsWithRole("player2")[0];
 
@@ -65,39 +55,59 @@ export function update() {
   if (shared.status === "end") {
     changeScene(scenes.end);
   }
+
+  Engine.update(engine);
+
+  for (const playerKey in playerData) {
+    const player = playerData[playerKey];
+    const levelConfig = CONFIG[getLevelName(player.level)];
+
+    if (partyIsHost() && levelConfig.targetMoving) {
+      if (shared[playerKey].target.x >= player.boundaries.right) {
+        shared[playerKey].targetMoving = -levelConfig.targetSpeed;
+      } else if (shared[playerKey].target.x <= player.boundaries.left) {
+        shared[playerKey].targetMoving = levelConfig.targetSpeed;
+      }
+    }
+
+    updateState(player);
+  }
 }
 
 export function draw() {
   rectMode(CENTER);
 
   for (const playerKey in playerData) {
-    renderScene(playerData[playerKey], shared);
+    renderScene(playerData[playerKey]);
   }
 
   push();
   fill(0);
   noStroke();
-  const headerHeight = 40;
-  rect(width / 2, headerHeight / 2, width, headerHeight);
+  rect(width / 2, CONFIG.headerHeight / 2, width, CONFIG.headerHeight);
 
   textFont(player1font);
   textSize(16);
   textAlign(LEFT, CENTER);
   fill("#FFFDD0");
-  text(playerData.player1.name.toUpperCase(), 20, headerHeight / 2);
+  text(playerData.player1.name.toUpperCase(), 20, CONFIG.headerHeight / 2);
 
   textFont(player2font);
   textAlign(RIGHT, CENTER);
-  text(playerData.player2.name.toUpperCase(), width - 20, headerHeight / 2);
+  text(playerData.player2.name.toUpperCase(), width - 20, CONFIG.headerHeight / 2);
 
   textAlign(CENTER, CENTER);
-  text("LEVEL 1", width / 2, headerHeight / 2);
+  text("LEVEL 1", width / 2, CONFIG.headerHeight / 2);
   pop();
 
   drawInstructions();
 }
 
 export function enter() {
+  for (const playerKey in playerData) {
+    createWalls(playerData[playerKey]);
+  }
+
   if (partyIsHost()) {
     shared.status = "playing";
   }
@@ -118,6 +128,9 @@ export function enter() {
 }
 
 export function exit() {
+  for (const playerKey in playerData) {
+    removeWalls(playerData[playerKey]);
+  }
   const resetButtons = selectAll(".resetButton");
   for (const button of resetButtons) {
     button.style("display", "none");
@@ -161,7 +174,7 @@ export function mousePressed() {
   for (const platform of player.platforms) {
     platform.selected = false;
   }
-  if (player.platforms.length >= CONFIG.maxPlatforms) return;
+  if (player.platforms.length >= CONFIG[getLevelName(player.level)].maxPlatforms) return;
   if (player.ballDropped) return;
   if (mouseX < player.boundaries.left || mouseX > player.boundaries.right) return;
 
@@ -195,22 +208,31 @@ export function mouseDragged() {
   }
 }
 
-function updateState() {
-  for (const playerKey in playerData) {
-    const player = playerData[playerKey];
-    if (player.ball.position.y > height) {
-      if (partyIsHost()) {
-        if (
-          player.ball.position.x - CONFIG.ballRadius >= shared[player.key].target.x - CONFIG.targetW / 2 &&
-          player.ball.position.x + CONFIG.ballRadius <= shared[player.key].target.x + CONFIG.targetW / 2
-        ) {
+function updateState(player) {
+  if (player.ball.position.y > height) {
+    if (isOnTarget(player)) {
+      if (player.level < CONFIG.numLevels) {
+        player.level++;
+      } else {
+        if (partyIsHost()) {
           shared.winner = player.name;
           shared.status = "end";
         }
-        partyEmit("hostReset", { playerKey });
       }
     }
+    if (partyIsHost()) {
+      partyEmit("hostReset", { playerKey: player.key });
+    }
   }
+}
+
+function isOnTarget(player) {
+  console.log("hit target");
+  const levelConfig = CONFIG[getLevelName(player.level)];
+  return (
+    player.ball.position.x - CONFIG.ballRadius >= shared[player.key].target.x - levelConfig.targetW / 2 &&
+    player.ball.position.x + CONFIG.ballRadius <= shared[player.key].target.x + levelConfig.targetW / 2
+  );
 }
 
 function createWalls(player) {
@@ -220,6 +242,13 @@ function createWalls(player) {
   ];
 
   Composite.add(engine.world, player.walls);
+}
+
+function removeWalls(player) {
+  for (const wall of player.walls) {
+    Composite.remove(engine.world, wall);
+  }
+  player.walls = [];
 }
 
 function drawInstructions() {

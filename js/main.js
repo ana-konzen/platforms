@@ -61,10 +61,6 @@ window.preload = function () {
   // Initialize p5.party first
   initializeParty();
 
-  events.preload();
-
-  player.preload();
-
   // Then preload all scenes
   Object.values(scenes).forEach((scene) => {
     if (scene.preload) {

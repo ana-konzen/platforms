@@ -1,13 +1,15 @@
 import { Bodies, Body, Composite, engine } from "./physics.js";
 import { CONFIG } from "./config.js";
+import { getLevelName } from "./util/util.js";
 
 export class Platform {
-  constructor(x, y, id) {
+  constructor(x, y, id, level = 1) {
     this.x = x;
     this.y = y;
     this.angle = 0;
-    this.w = CONFIG.platformW;
-    this.h = CONFIG.platformH;
+    this.level = level;
+    this.w = CONFIG[getLevelName(this.level)].platformW;
+    this.h = CONFIG[getLevelName(this.level)].platformH;
     this.body = Bodies.rectangle(x, y, this.w, this.h, {
       isStatic: true,
     });
@@ -57,7 +59,7 @@ export class Platform {
     if (!ballDropped) {
       this.find();
       if (this.found || this.selected) {
-        pg.fill("blue");
+        pg.fill(CONFIG[getLevelName(this.level)].platformFoundColor);
       }
     }
     pg.translate(this.x, this.y);

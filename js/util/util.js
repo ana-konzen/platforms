@@ -5,3 +5,7 @@ export function makeId() {
 export function randomPos(boundaries) {
   return random(boundaries.left, boundaries.right);
 }
+
+export function getLevelName(index) {
+  return `level${index}`;
+}

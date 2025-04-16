@@ -2,12 +2,8 @@ import { randomPos } from "./util/util.js";
 import { playerData } from "./player.js";
 import { engine, Composite, Body } from "./physics.js";
 import { Platform } from "./platform.js";
-
-let shared;
-
-export function preload() {
-  shared = partyLoadShared("globals");
-}
+import { CONFIG } from "./config.js";
+import { shared } from "./scenes/lobbyScene.js";
 
 export function setup() {
   partySubscribe("dropBall", onBallDrop);
@@ -23,13 +19,12 @@ function onHostReset({ playerKey }) {
   if (!partyIsHost()) return;
 
   const player = playerData[playerKey];
-  const headerHeight = 40; // Match the header height in playScene.js
 
   shared[playerKey].ball.x = randomPos(player.boundaries);
-  shared[playerKey].ball.y = headerHeight;
-  shared[playerKey].target.x = randomPos(player.boundaries);
+  shared[playerKey].ball.y = CONFIG.headerHeight;
+  shared[playerKey].target.x = CONFIG.easyMode ? shared[playerKey].ball.x : randomPos(player.boundaries);
 
-  partyEmit("playerReset", { playerKey, ballX: shared[playerKey].ball.x, ballY: headerHeight });
+  partyEmit("playerReset", { playerKey, ballX: shared[playerKey].ball.x, ballY: shared[playerKey].ball.y });
 }
 
 function onPlayerReset({ playerKey, ballX, ballY }) {
@@ -58,7 +53,7 @@ function onBallDrop({ player }) {
 }
 
 function onPlatformAdded({ playerKey, x, y, id }) {
-  const platform = new Platform(x, y, id);
+  const platform = new Platform(x, y, id, playerData[playerKey].level);
   playerData[playerKey].platforms.push(platform);
 }
 

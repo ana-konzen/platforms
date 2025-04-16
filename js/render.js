@@ -1,16 +1,15 @@
+import { shared } from "./scenes/lobbyScene.js";
 import { CONFIG } from "./config.js";
+import { getLevelName } from "./util/util.js";
 
-export function renderScene(player, shared) {
+export function renderScene(player) {
   const pg = player.pg;
   const xOffset = player.key === "player1" ? 0 : width / 2;
+  const levelConfig = CONFIG[getLevelName(player.level)];
   pg.rectMode(CENTER);
   pg.noStroke();
-  pg.background(player.color);
-  pg.textFont("Helvetica");
-  pg.textSize(18);
-  pg.textAlign(CENTER);
-  pg.fill("white");
-  pg.text(player.name, pg.width / 2, 30);
+
+  pg.background(levelConfig[player.key].bgColor);
 
   pg.push();
   pg.translate(-xOffset, 0);
@@ -22,22 +21,22 @@ export function renderScene(player, shared) {
     }
   }
 
-  pg.fill(CONFIG.targetColor);
+  pg.fill(levelConfig.targetColor);
   pg.rect(
     shared[player.key].target.x,
     shared[player.key].target.y,
-    CONFIG.targetW,
-    CONFIG.targetH,
-    CONFIG.targetH / 2
+    levelConfig.targetW,
+    levelConfig.targetH,
+    levelConfig.targetH / 2
   );
 
-  pg.fill(CONFIG.platformColor);
+  pg.fill(levelConfig.platformColor);
   for (const platform of player.platforms) {
     platform.draw(pg, player.ballDropped);
   }
 
   pg.fill(CONFIG.ballColor);
-  pg.ellipse(player.ball.position.x, player.ball.position.y, CONFIG.ballRadius * 2);
+  pg.ellipse(player.ball.position.x, player.ball.position.y, levelConfig.ballRadius * 2);
 
   pg.pop();
 

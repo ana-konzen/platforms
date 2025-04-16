@@ -5,7 +5,7 @@ import { playerData } from "../player.js";
 import { CONFIG } from "../config.js";
 import { platFont, formsFont, basicFont } from "./titleScene.js";
 
-let shared;
+export let shared;
 let nameInput;
 let nameInputContainer;
 let isEnteringName = false;
@@ -15,7 +15,7 @@ let platform1AnimationStarted = false;
 let platform2AnimationStarted = false;
 let platform1AnimationStartTime;
 let platform2AnimationStartTime;
-let platformAnimationDuration = 800;
+const platformAnimationDuration = 800;
 const exitAnimationDuration = 1000;
 const exitDelay = 300;
 
@@ -40,52 +40,40 @@ export function setup() {
   const welcomeText = createDiv("WELCOME");
   welcomeText.class("instruction-text welcome-text");
 
-  nameInput = createInput("");
-  nameInput.id("nameInput");
-  nameInput.attribute("placeholder", "ENTER YOUR NAME");
+  nameInput = createInput("").id("nameInput").attribute("placeholder", "ENTER YOUR NAME");
 
-  const submitButton = createButton("SUBMIT");
-  submitButton.class("submit-button");
+  const submitButton = createButton("SUBMIT").class("submit-button");
 
-  nameInputContainer.child(welcomeText);
-  nameInputContainer.child(nameInput);
-  nameInputContainer.child(submitButton);
+  nameInputContainer.child(welcomeText).child(nameInput).child(submitButton);
 
   const handleSubmit = () => {
     const playerName = nameInput.value().trim();
-    console.log("Submitting name:", playerName);
-    console.log("Current role:", currentPlayerRole);
 
     if (playerName) {
       if (currentPlayerRole === "player1") {
         playerData.player1.name = playerName;
         shared.player1.name = playerName;
         platform1AnimationStarted = false;
-        console.log("Set player1 name to:", playerData.player1.name);
       } else if (currentPlayerRole === "player2") {
         playerData.player2.name = playerName;
         shared.player2.name = playerName;
         platform2AnimationStarted = false;
-        console.log("Set player2 name to:", playerData.player2.name);
       }
 
       nameInputContainer.style("display", "none");
       isEnteringName = false;
       roleKeeper.requestRole(currentPlayerRole);
-      console.log("Role requested:", currentPlayerRole);
     }
   };
 
   submitButton.elt.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
-    console.log("Submit button clicked");
     handleSubmit();
   });
 
   nameInput.elt.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
-      console.log("Enter key pressed");
       handleSubmit();
     }
   });
