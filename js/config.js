@@ -5,7 +5,7 @@ export const CONFIG = {
   wallColor: "#C8121D",
   ballColor: "#EBC733",
   platformColor: "#FFFDD0",
-  platformFoundColor: "#B2D89E",
+  platformFoundColor: "blue",
   player1Color: "#681037",
   player2Color: "#C8121D",
   headerHeight: 40,
@@ -36,7 +36,7 @@ export const CONFIG = {
     ballRadius: 10,
     maxPlatforms: 5,
     platformColor: "#FFFDD0",
-    platformFoundColor: "#B2D89E",
+    platformFoundColor: "blue",
     targetColor: "#B2D89E",
     player1: {
       bgColor: "#681037",
@@ -56,7 +56,7 @@ export const CONFIG = {
     ballRadius: 10,
     maxPlatforms: 5,
     platformColor: "#FFFDD0",
-    platformFoundColor: "#B2D89E",
+    platformFoundColor: "blue",
     targetColor: "#B2D89E",
 
     player1: {
@@ -77,7 +77,7 @@ export const CONFIG = {
     ballRadius: 10,
     maxPlatforms: 3,
     platformColor: "#FFFDD0",
-    platformFoundColor: "#B2D89E",
+    platformFoundColor: "blue",
     targetColor: "#B2D89E",
 
     player1: {

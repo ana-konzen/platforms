@@ -60,6 +60,8 @@ export class Platform {
       this.find();
       if (this.found || this.selected) {
         pg.fill(CONFIG[getLevelName(this.level)].platformFoundColor);
+      } else {
+        pg.fill(CONFIG[getLevelName(this.level)].platformColor);
       }
     }
     pg.translate(this.x, this.y);
