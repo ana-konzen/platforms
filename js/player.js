@@ -11,6 +11,7 @@ export const playerData = {
     platforms: [],
     ballDropped: false,
     level: 1,
+    targetSpeed: 0,
   },
   player2: {
     name: "player 2",
@@ -19,6 +20,7 @@ export const playerData = {
     platforms: [],
     ballDropped: false,
     level: 1,
+    targetSpeed: 0,
   },
 };
 

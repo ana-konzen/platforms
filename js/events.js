@@ -22,7 +22,10 @@ function onHostReset({ playerKey }) {
 
   shared[playerKey].ball.x = randomPos(player.boundaries);
   shared[playerKey].ball.y = CONFIG.headerHeight;
-  shared[playerKey].target.x = CONFIG.easyMode ? shared[playerKey].ball.x : randomPos(player.boundaries);
+  shared[playerKey].target.initialX = CONFIG.easyMode
+    ? shared[playerKey].ball.x
+    : randomPos(player.boundaries);
+  shared[playerKey].target.x = shared[playerKey].target.initialX;
 
   partyEmit("playerReset", { playerKey, ballX: shared[playerKey].ball.x, ballY: shared[playerKey].ball.y });
 }

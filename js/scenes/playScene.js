@@ -62,14 +62,19 @@ export function update() {
     const player = playerData[playerKey];
     const levelConfig = CONFIG[getLevelName(player.level)];
 
-    if (partyIsHost() && levelConfig.targetMoving) {
-      console.log("targetMoving");
-      shared[playerKey].target.x += levelConfig.targetSpeed;
+    if (levelConfig.targetMoving && partyIsHost()) {
+      shared[playerKey].target.x += player.targetSpeed;
+
+      console.log(player.targetSpeed);
+      console.log(shared[playerKey].target.x);
+      console.log(shared[playerKey].target.initialX);
+
       if (
-        shared[playerKey].target.x > player.boundaries.right ||
-        shared[playerKey].target.x < player.boundaries.left
+        shared[playerKey].target.x < shared[playerKey].target.initialX - levelConfig.targetRange ||
+        shared[playerKey].target.x > shared[playerKey].target.initialX + levelConfig.targetRange
       ) {
-        levelConfig.targetSpeed *= -1;
+        console.log("hit wall");
+        player.targetSpeed *= -1;
       }
     }
 
@@ -216,6 +221,8 @@ function updateState(player) {
     if (isOnTarget(player)) {
       if (player.level < CONFIG.numLevels) {
         player.level++;
+        player.targetSpeed = CONFIG[getLevelName(player.level)].targetSpeed;
+        console.log("level up", player.key, player.level);
       } else {
         if (partyIsHost()) {
           shared.winner = player.name;
@@ -230,7 +237,7 @@ function updateState(player) {
 }
 
 function isOnTarget(player) {
-  console.log("hit target");
+  console.log("hit target", player.key);
   const levelConfig = CONFIG[getLevelName(player.level)];
   return (
     player.ball.position.x - CONFIG.ballRadius >= shared[player.key].target.x - levelConfig.targetW / 2 &&

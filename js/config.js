@@ -1,5 +1,3 @@
-import { randomPos } from "./util/util.js";
-
 export const CONFIG = {
   //style
   background: "#f7f7ed",
@@ -29,6 +27,7 @@ export const CONFIG = {
   level1: {
     targetMoving: false,
     targetSpeed: 0,
+    targetRange: 0,
     platformW: 50,
     platformH: 15,
     targetW: 50,
