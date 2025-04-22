@@ -38,7 +38,7 @@ export function initializeParty() {
     try {
       // Only connect if not already connected
       if (!window.partyIsConnected?.()) {
-        partyConnect("wss://demoserver.p5party.org", "ana_danit_fiona_test");
+        partyConnect("wss://demoserver.p5party.org", "ana_danit_fiona");
         console.log("p5.party initialized");
       } else {
         console.log("p5.party already connected");

@@ -65,15 +65,10 @@ export function update() {
     if (levelConfig.targetMoving && partyIsHost()) {
       shared[playerKey].target.x += player.targetSpeed;
 
-      console.log(player.targetSpeed);
-      console.log(shared[playerKey].target.x);
-      console.log(shared[playerKey].target.initialX);
-
       if (
         shared[playerKey].target.x < shared[playerKey].target.initialX - levelConfig.targetRange ||
         shared[playerKey].target.x > shared[playerKey].target.initialX + levelConfig.targetRange
       ) {
-        console.log("hit wall");
         player.targetSpeed *= -1;
       }
     }
