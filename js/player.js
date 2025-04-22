@@ -47,10 +47,23 @@ export function setup() {
     if (partyIsHost()) {
       shared[playerKey] = {
         ball: { initialX: randomPos(player.boundaries), y: headerHeight },
-        target: { initialX: randomPos(player.boundaries), y: height - CONFIG.targetH / 2 - 10 },
+        target: {
+          y: height - CONFIG.targetH / 2 - 10,
+        },
         color: player.color,
       };
     }
+
+    shared[playerKey].target.initialX = CONFIG.easyMode
+      ? shared[playerKey].ball.initialX
+      : randomPos(
+          player.boundaries,
+          true,
+          shared[playerKey].ball.initialX,
+          CONFIG["level1"].targetRange,
+          CONFIG["level1"].targetW / 2
+        );
+
     player.ball = Bodies.circle(
       shared[playerKey]?.ball?.initialX,
       headerHeight,

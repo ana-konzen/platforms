@@ -30,14 +30,13 @@ export function setup() {
     .style("width", width + "px")
     .style("height", height + "px");
   for (const playerKey in playerData) {
-    const buttonW = 40;
-    const buttonX = playerKey === "player1" ? 0 : width - buttonW;
+    const buttonX = playerKey === "player1" ? 0 : width - CONFIG.resetButtonW;
     const resetButton = createButton("↻")
       .addClass("reset-button")
       .parent(buttonCont)
       .style("left", buttonX + "px")
-      .style("width", buttonW + "px")
-      .style("top", CONFIG.headerHeight + "px");
+      .style("width", CONFIG.resetButtonW + "px")
+      .style("top", 0 + "px");
     resetButton.mousePressed(() => {
       partyEmit("hostReset", { playerKey, newLevel: false });
     });
@@ -74,8 +73,10 @@ export function update() {
       shared[playerKey].target.x += player.targetSpeed;
 
       if (
-        shared[playerKey].target.x < shared[playerKey].target.initialX - levelConfig.targetRange ||
-        shared[playerKey].target.x > shared[playerKey].target.initialX + levelConfig.targetRange
+        shared[playerKey].target.x <
+          max(shared[playerKey].target.initialX - levelConfig.targetRange, player.boundaries.left) ||
+        shared[playerKey].target.x >
+          min(shared[playerKey].target.initialX + levelConfig.targetRange, player.boundaries.right)
       ) {
         player.targetSpeed *= -1;
       }
@@ -101,11 +102,11 @@ export function draw() {
   textSize(16);
   textAlign(LEFT, CENTER);
   fill("#FFFDD0");
-  text(playerData.player1.name.toUpperCase(), 20, CONFIG.headerHeight / 2);
+  text(playerData.player1.name.toUpperCase(), CONFIG.resetButtonW + 20, CONFIG.headerHeight / 2);
 
   textFont(player2font);
   textAlign(RIGHT, CENTER);
-  text(playerData.player2.name.toUpperCase(), width - 20, CONFIG.headerHeight / 2);
+  text(playerData.player2.name.toUpperCase(), width - CONFIG.resetButtonW - 20, CONFIG.headerHeight / 2);
 
   textAlign(CENTER, CENTER);
   text("LEVEL 1", width / 2, CONFIG.headerHeight / 2);
@@ -174,6 +175,7 @@ export function keyPressed() {
 }
 
 export function mousePressed() {
+  if (showInstructions) return;
   const player = playerData[localPlayerKey];
   for (const platform of player.platforms) {
     platform.selected = false;
@@ -216,21 +218,14 @@ function updateState(player) {
   if (player.ball.position.y > height) {
     if (isOnTarget(player) && !player.hitTarget) {
       player.hitTarget = true;
-      console.log(player.hitTarget);
-      if (player.level < CONFIG.numLevels) {
-        player.level++;
-        player.targetSpeed = CONFIG[getLevelName(player.level)].targetSpeed;
-        console.log("level up", player.key, player.level);
-      } else {
-        if (partyIsHost()) {
-          shared.winner = player.name;
-          shared.status = "end";
-        }
+      if (partyIsHost()) {
+        console.log("hit target check 2", player.key);
+        partyEmit("targetHit", { playerKey: player.key });
       }
-    }
-    if (partyIsHost()) {
-      console.log(player.hitTarget);
-      partyEmit("hostReset", { playerKey: player.key, newLevel: player.hitTarget });
+    } else {
+      // player.hitTarget = false;
+
+      partyEmit("hostReset", { playerKey: player.key, newLevel: false });
     }
   }
 }
