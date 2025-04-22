@@ -234,8 +234,8 @@ function isOnTarget(player) {
   console.log("hit target", player.key);
   const levelConfig = CONFIG[getLevelName(player.level)];
   return (
-    player.ball.position.x - CONFIG.ballRadius >= shared[player.key].target.x - levelConfig.targetW / 2 &&
-    player.ball.position.x + CONFIG.ballRadius <= shared[player.key].target.x + levelConfig.targetW / 2
+    player.ball.position.x >= shared[player.key].target.x - levelConfig.targetW / 2 - CONFIG.ballRadius &&
+    player.ball.position.x <= shared[player.key].target.x + levelConfig.targetW / 2 + CONFIG.ballRadius
   );
 }
 

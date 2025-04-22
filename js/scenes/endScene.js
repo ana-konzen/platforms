@@ -1,6 +1,8 @@
 import { changeScene, scenes } from "../main.js";
 import { renderBackground } from "../background.js";
 import { shared } from "./titleScene.js";
+import { roleKeeper } from "./playScene.js";
+import { playerData } from "../player.js";
 
 const scrollSpeed = 2;
 let scrollPosition = 0;
@@ -29,13 +31,15 @@ export function update() {
 export function draw() {
   renderBackground();
 
+  const textToScroll = partyIsHost() ? "CLICK TO PLAY AGAIN   " : "WAITING FOR HOST TO RESTART   ";
+
   if (!endAnimationStarted) {
     endAnimationStartTime = millis();
     endAnimationStarted = true;
 
     textSize(18);
     textFont("Helvetica");
-    textWidthValue = textWidth("CLICK TO PLAY AGAIN   ");
+    textWidthValue = textWidth(textToScroll);
   }
 
   textFont("Helvetica");
@@ -64,8 +68,6 @@ export function draw() {
 
   scrollPosition -= scrollSpeed;
 
-  const textToScroll = "CLICK TO PLAY AGAIN   ";
-
   for (let i = 0; i < 5; i++) {
     const xPos = scrollPosition + i * textWidthValue;
     text(textToScroll, xPos, height - 20);
@@ -77,9 +79,13 @@ export function draw() {
 }
 
 export function mousePressed() {
-  shared.status = "waiting";
+  if (partyIsHost()) shared.status = "waiting";
 }
 
 export function exit() {
-  shared.winner = "";
+  roleKeeper.requestRole("unassigned");
+  for (const playerKey in playerData) {
+    playerData[playerKey].level = 1;
+  }
+  if (partyIsHost()) shared.winner = "";
 }
