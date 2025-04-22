@@ -171,7 +171,7 @@ export function mousePressed() {
 export function keyPressed() {
   const player1 = roleKeeper.guestsWithRole("player1")[0];
   const player2 = roleKeeper.guestsWithRole("player2")[0];
-  if (roleKeeper.myRole() === "player1" && player1 && player2 && !shared.exitAnimationStarted) {
+  if (partyIsHost() && player1 && player2 && !shared.exitAnimationStarted) {
     shared.exitAnimationStarted = true;
     shared.exitAnimationStartTime = millis();
   }
@@ -337,11 +337,10 @@ export function draw() {
 
   let startText = "WAITING FOR PLAYERS";
   if (player1 && player2) {
-    if (roleKeeper.myRole() === "player1") {
+    if (partyIsHost()) {
       startText = "PRESS ANY KEY TO START THE GAME";
     } else {
-      const player1Name = shared.player1.name || "other player";
-      startText = `WAITING FOR ${player1Name.toUpperCase()} TO START THE GAME`;
+      startText = `WAITING FOR HOST TO START THE GAME`;
     }
   }
 

@@ -10,6 +10,7 @@ export const playerData = {
     color: CONFIG.player1Color,
     platforms: [],
     ballDropped: false,
+    hitTarget: false,
     level: 1,
     targetSpeed: 0,
   },
@@ -19,6 +20,7 @@ export const playerData = {
     color: CONFIG.player2Color,
     platforms: [],
     ballDropped: false,
+    hitTarget: false,
     level: 1,
     targetSpeed: 0,
   },
@@ -44,12 +46,17 @@ export function setup() {
     const player = playerData[playerKey];
     if (partyIsHost()) {
       shared[playerKey] = {
-        ball: { x: randomPos(player.boundaries), y: headerHeight },
-        target: { x: randomPos(player.boundaries), y: height - CONFIG.targetH / 2 - 10 },
+        ball: { initialX: randomPos(player.boundaries), y: headerHeight },
+        target: { initialX: randomPos(player.boundaries), y: height - CONFIG.targetH / 2 - 10 },
         color: player.color,
       };
     }
-    player.ball = Bodies.circle(shared[playerKey]?.ball?.x, headerHeight, CONFIG.ballRadius, ballOptions);
+    player.ball = Bodies.circle(
+      shared[playerKey]?.ball?.initialX,
+      headerHeight,
+      CONFIG.ballRadius,
+      ballOptions
+    );
     player.pg = createGraphics(width / 2, height);
   }
 }

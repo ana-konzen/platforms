@@ -15,19 +15,26 @@ export function setup() {
   partySubscribe("playerReset", onPlayerReset);
 }
 
-function onHostReset({ playerKey }) {
+function onHostReset({ playerKey, newLevel = true }) {
   if (!partyIsHost()) return;
 
   const player = playerData[playerKey];
 
-  shared[playerKey].ball.x = randomPos(player.boundaries);
+  if (newLevel) shared[playerKey].ball.initialX = randomPos(player.boundaries);
+
+  shared[playerKey].ball.x = shared[playerKey].ball.initialX;
+
   shared[playerKey].ball.y = CONFIG.headerHeight;
   shared[playerKey].target.initialX = CONFIG.easyMode
     ? shared[playerKey].ball.x
     : randomPos(player.boundaries);
   shared[playerKey].target.x = shared[playerKey].target.initialX;
 
-  partyEmit("playerReset", { playerKey, ballX: shared[playerKey].ball.x, ballY: shared[playerKey].ball.y });
+  partyEmit("playerReset", {
+    playerKey,
+    ballX: shared[playerKey].ball.initialX,
+    ballY: shared[playerKey].ball.y,
+  });
 }
 
 function onPlayerReset({ playerKey, ballX, ballY }) {
@@ -36,12 +43,14 @@ function onPlayerReset({ playerKey, ballX, ballY }) {
   Body.setPosition(player.ball, { x: ballX, y: ballY });
 
   console.log("ballX", ballX);
+  console.log(player.ball);
   console.log(player.ball.position.x);
 
   Body.setVelocity(player.ball, { x: 0, y: 0 });
   Body.setAngularVelocity(player.ball, 0);
   Body.setAngle(player.ball, 0);
   player.ballDropped = false;
+  player.hitTarget = false;
   Composite.remove(engine.world, player.ball);
   for (const platform of player.platforms) {
     Composite.remove(engine.world, platform.body);

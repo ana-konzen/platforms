@@ -18,6 +18,20 @@ canvas {
   border: 2px solid #fffdd0;
 }
 
+.button-cont {
+  position: fixed;
+  display: none;
+}
+
+.reset-button {
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  color: #fffdd0;
+  font-size: 28px;
+  cursor: pointer;
+}
+
 .welcome-text {
   font-family: "Television";
   font-size: 30px;

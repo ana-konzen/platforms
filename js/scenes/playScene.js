@@ -25,13 +25,21 @@ export function preload() {
 }
 
 export function setup() {
+  const buttonCont = createDiv()
+    .addClass("button-cont")
+    .style("width", width + "px")
+    .style("height", height + "px");
   for (const playerKey in playerData) {
-    const resetButton = createButton("Reset");
-    const buttonX = playerKey === "player1" ? 50 : width - 50;
-    resetButton.position(buttonX, 10);
-    resetButton.addClass("resetButton");
+    const buttonW = 40;
+    const buttonX = playerKey === "player1" ? 0 : width - buttonW;
+    const resetButton = createButton("↻")
+      .addClass("reset-button")
+      .parent(buttonCont)
+      .style("left", buttonX + "px")
+      .style("width", buttonW + "px")
+      .style("top", CONFIG.headerHeight + "px");
     resetButton.mousePressed(() => {
-      partyEmit("hostReset", { playerKey });
+      partyEmit("hostReset", { playerKey, newLevel: false });
     });
   }
 
@@ -103,7 +111,8 @@ export function draw() {
   text("LEVEL 1", width / 2, CONFIG.headerHeight / 2);
   pop();
 
-  drawInstructions();
+  if (showInstructions) drawInstructions();
+  if (!showInstructions) select(".button-cont").style("display", "block");
 }
 
 export function enter() {
@@ -121,11 +130,6 @@ export function enter() {
     }
   }
 
-  const resetButtons = selectAll(".resetButton");
-  for (const button of resetButtons) {
-    button.style("display", "block");
-  }
-
   showInstructions = true;
   instructionsAnimStartTime = millis();
 }
@@ -134,10 +138,7 @@ export function exit() {
   for (const playerKey in playerData) {
     removeWalls(playerData[playerKey]);
   }
-  const resetButtons = selectAll(".resetButton");
-  for (const button of resetButtons) {
-    button.style("display", "none");
-  }
+  select(".button-cont").style("display", "none");
 }
 
 export function keyPressed() {
@@ -213,7 +214,9 @@ export function mouseDragged() {
 
 function updateState(player) {
   if (player.ball.position.y > height) {
-    if (isOnTarget(player)) {
+    if (isOnTarget(player) && !player.hitTarget) {
+      player.hitTarget = true;
+      console.log(player.hitTarget);
       if (player.level < CONFIG.numLevels) {
         player.level++;
         player.targetSpeed = CONFIG[getLevelName(player.level)].targetSpeed;
@@ -226,7 +229,8 @@ function updateState(player) {
       }
     }
     if (partyIsHost()) {
-      partyEmit("hostReset", { playerKey: player.key });
+      console.log(player.hitTarget);
+      partyEmit("hostReset", { playerKey: player.key, newLevel: player.hitTarget });
     }
   }
 }
