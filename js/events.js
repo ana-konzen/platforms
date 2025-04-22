@@ -3,7 +3,7 @@ import { playerData } from "./player.js";
 import { engine, Composite, Body } from "./physics.js";
 import { Platform } from "./platform.js";
 import { CONFIG } from "./config.js";
-import { shared } from "./scenes/lobbyScene.js";
+import { shared } from "./scenes/titleScene.js";
 
 export function setup() {
   partySubscribe("dropBall", onBallDrop);

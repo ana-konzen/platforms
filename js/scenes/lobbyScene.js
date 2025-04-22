@@ -4,8 +4,8 @@ import { roleKeeper } from "./playScene.js";
 import { playerData } from "../player.js";
 import { CONFIG } from "../config.js";
 import { platFont, formsFont, basicFont } from "./titleScene.js";
+import { shared } from "./titleScene.js";
 
-export let shared;
 let nameInput;
 let nameInputContainer;
 let isEnteringName = false;
@@ -18,17 +18,6 @@ let platform2AnimationStartTime;
 const platformAnimationDuration = 800;
 const exitAnimationDuration = 1000;
 const exitDelay = 300;
-
-export function preload() {
-  shared = partyLoadShared("shared", {
-    state: "waiting",
-    winner: "",
-    player1: { name: "" },
-    player2: { name: "" },
-    exitAnimationStarted: false,
-    exitAnimationStartTime: 0,
-  });
-}
 
 export function setup() {
   if (!playerData.player1) playerData.player1 = { name: "" };

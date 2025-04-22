@@ -5,7 +5,7 @@ import { playerData } from "../player.js";
 import { engine, Engine, Composite, Bodies } from "../physics.js";
 import { RoleKeeper } from "../util/RoleKeeper.js";
 import { renderScene } from "../render.js";
-import { shared } from "./lobbyScene.js";
+import { shared } from "./titleScene.js";
 
 let localPlayerKey;
 
@@ -63,10 +63,13 @@ export function update() {
     const levelConfig = CONFIG[getLevelName(player.level)];
 
     if (partyIsHost() && levelConfig.targetMoving) {
-      if (shared[playerKey].target.x >= player.boundaries.right) {
-        shared[playerKey].targetMoving = -levelConfig.targetSpeed;
-      } else if (shared[playerKey].target.x <= player.boundaries.left) {
-        shared[playerKey].targetMoving = levelConfig.targetSpeed;
+      console.log("targetMoving");
+      shared[playerKey].target.x += levelConfig.targetSpeed;
+      if (
+        shared[playerKey].target.x > player.boundaries.right ||
+        shared[playerKey].target.x < player.boundaries.left
+      ) {
+        levelConfig.targetSpeed *= -1;
       }
     }
 

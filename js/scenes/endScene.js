@@ -1,6 +1,6 @@
 import { changeScene, scenes } from "../main.js";
 import { renderBackground } from "../background.js";
-import { shared } from "./lobbyScene.js";
+import { shared } from "./titleScene.js";
 
 const scrollSpeed = 2;
 let scrollPosition = 0;

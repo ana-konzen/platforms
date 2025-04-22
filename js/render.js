@@ -1,4 +1,4 @@
-import { shared } from "./scenes/lobbyScene.js";
+import { shared } from "./scenes/titleScene.js";
 import { CONFIG } from "./config.js";
 import { getLevelName } from "./util/util.js";
 

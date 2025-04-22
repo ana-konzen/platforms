@@ -1,7 +1,7 @@
 import { Bodies } from "./physics.js";
 import { CONFIG } from "./config.js";
 import { randomPos } from "./util/util.js";
-import { shared } from "./scenes/lobbyScene.js";
+import { shared } from "./scenes/titleScene.js";
 
 export const playerData = {
   player1: {

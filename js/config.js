@@ -1,3 +1,5 @@
+import { randomPos } from "./util/util.js";
+
 export const CONFIG = {
   //style
   background: "#f7f7ed",
@@ -36,7 +38,6 @@ export const CONFIG = {
     platformColor: "#FFFDD0",
     platformFoundColor: "#B2D89E",
     targetColor: "#B2D89E",
-
     player1: {
       bgColor: "#681037",
     },
@@ -47,6 +48,7 @@ export const CONFIG = {
   level2: {
     targetMoving: true,
     targetSpeed: 1,
+    targetRange: 100,
     platformW: 40,
     platformH: 10,
     targetW: 50,
@@ -67,6 +69,7 @@ export const CONFIG = {
   level3: {
     targetMoving: true,
     targetSpeed: 2,
+    targetRange: 50,
     platformW: 40,
     platformH: 10,
     targetW: 30,

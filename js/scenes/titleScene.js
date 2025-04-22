@@ -14,6 +14,8 @@ export let platFont;
 export let formsFont;
 export let basicFont;
 
+export let shared;
+
 export function mousePressed() {
   changeScene(scenes.lobby);
 }
@@ -22,6 +24,21 @@ export function preload() {
   platFont = loadFont("../../fonts/NeueTelevision-RetroUltraBoldW50P0.otf");
   formsFont = loadFont("../../fonts/NeueTelevision-RetroUltraBoldW50P50.otf");
   basicFont = loadFont("../../fonts/NeueTelevisionS-BlackW50P50.otf");
+
+  shared = partyLoadShared("shared", {
+    state: "waiting",
+    winner: "",
+    player1: { name: "" },
+    player2: { name: "" },
+    exitAnimationStarted: false,
+    exitAnimationStartTime: 0,
+  });
+}
+
+export function enter() {
+  if (partyIsHost()) {
+    shared.status = "waiting";
+  }
 }
 
 export function draw() {
