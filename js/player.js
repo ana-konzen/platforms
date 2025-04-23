@@ -45,31 +45,33 @@ export function setup() {
   for (const playerKey in playerData) {
     const player = playerData[playerKey];
     if (partyIsHost()) {
+      const ballInitialX = randomPos(player.boundaries);
       shared[playerKey] = {
-        ball: { initialX: randomPos(player.boundaries), y: headerHeight },
+        ball: { initialX: ballInitialX, y: headerHeight },
         target: {
           y: height - CONFIG.targetH / 2 - 10,
+          initialX: CONFIG.easyMode
+            ? ballInitialX
+            : randomPos(
+                player.boundaries,
+                true,
+                ballInitialX,
+                CONFIG["level1"].targetRange,
+                CONFIG["level1"].targetW / 2
+              )
         },
         color: player.color,
       };
     }
 
-    shared[playerKey].target.initialX = CONFIG.easyMode
-      ? shared[playerKey].ball.initialX
-      : randomPos(
-          player.boundaries,
-          true,
-          shared[playerKey].ball.initialX,
-          CONFIG["level1"].targetRange,
-          CONFIG["level1"].targetW / 2
-        );
-
-    player.ball = Bodies.circle(
-      shared[playerKey]?.ball?.initialX,
-      headerHeight,
-      CONFIG.ballRadius,
-      ballOptions
-    );
-    player.pg = createGraphics(width / 2, height);
+    if (shared[playerKey]?.ball?.initialX !== undefined) {
+      player.ball = Bodies.circle(
+        shared[playerKey].ball.initialX,
+        headerHeight,
+        CONFIG.ballRadius,
+        ballOptions
+      );
+      player.pg = createGraphics(width / 2, height);
+    }
   }
 }

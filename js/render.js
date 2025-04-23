@@ -2,6 +2,24 @@ import { shared } from "./scenes/titleScene.js";
 import { CONFIG } from "./config.js";
 import { getLevelName } from "./util/util.js";
 
+// Animation state for each player
+const playerAnimState = {
+  player1: {
+    isAnimating: false,
+    animStartTime: 0,
+    prevBgColor: null,
+    prevLevel: 1
+  },
+  player2: {
+    isAnimating: false,
+    animStartTime: 0,
+    prevBgColor: null,
+    prevLevel: 1
+  }
+};
+
+const LEVEL_ANIM_DURATION = 800; // Animation duration in milliseconds
+
 export function renderScene(player) {
   const pg = player.pg;
   const xOffset = player.key === "player1" ? 0 : width / 2;
@@ -9,7 +27,35 @@ export function renderScene(player) {
   pg.rectMode(CENTER);
   pg.noStroke();
 
-  pg.background(levelConfig[player.key].bgColor);
+  // Check if level changed
+  if (player.level !== playerAnimState[player.key].prevLevel) {
+    playerAnimState[player.key].isAnimating = true;
+    playerAnimState[player.key].animStartTime = millis();
+    playerAnimState[player.key].prevBgColor = CONFIG[getLevelName(playerAnimState[player.key].prevLevel)][player.key].bgColor;
+    playerAnimState[player.key].prevLevel = player.level;
+  }
+
+  // Handle background animation
+  if (playerAnimState[player.key].isAnimating) {
+    const currentTime = millis() - playerAnimState[player.key].animStartTime;
+    const progress = constrain(currentTime / LEVEL_ANIM_DURATION, 0, 1);
+    
+    // Draw old background
+    pg.background(playerAnimState[player.key].prevBgColor);
+    
+    // Draw new background sliding up from bottom
+    pg.push();
+    pg.fill(levelConfig[player.key].bgColor);
+    const slideHeight = lerp(0, pg.height, progress);
+    pg.rect(pg.width/2, pg.height - slideHeight/2, pg.width, slideHeight);
+    pg.pop();
+
+    if (progress >= 1) {
+      playerAnimState[player.key].isAnimating = false;
+    }
+  } else {
+    pg.background(levelConfig[player.key].bgColor);
+  }
 
   pg.push();
   pg.translate(-xOffset, 0);

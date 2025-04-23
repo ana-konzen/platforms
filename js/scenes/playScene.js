@@ -1,6 +1,6 @@
 import { CONFIG } from "../config.js";
 import { changeScene, scenes } from "../main.js";
-import { makeId, getLevelName } from "../util/util.js";
+import { makeId, getLevelName, randomPos } from "../util/util.js";
 import { playerData } from "../player.js";
 import { engine, Engine, Composite, Bodies } from "../physics.js";
 import { RoleKeeper } from "../util/RoleKeeper.js";
@@ -98,18 +98,26 @@ export function draw() {
   noStroke();
   rect(width / 2, CONFIG.headerHeight / 2, width, CONFIG.headerHeight);
 
+  // Player 1 name on far left
   textFont(player1font);
   textSize(16);
   textAlign(LEFT, CENTER);
   fill("#FFFDD0");
   text(playerData.player1.name.toUpperCase(), CONFIG.resetButtonW + 20, CONFIG.headerHeight / 2);
 
+  // Player 1 level near center-left
+  textAlign(RIGHT, CENTER);
+  text("LEVEL " + playerData.player1.level.toString(), width / 2 - 20, CONFIG.headerHeight / 2);
+
+  // Player 2 level near center-right
   textFont(player2font);
+  textAlign(LEFT, CENTER);
+  text("LEVEL " + playerData.player2.level.toString(), width / 2 + 20, CONFIG.headerHeight / 2);
+
+  // Player 2 name on far right
   textAlign(RIGHT, CENTER);
   text(playerData.player2.name.toUpperCase(), width - CONFIG.resetButtonW - 20, CONFIG.headerHeight / 2);
 
-  textAlign(CENTER, CENTER);
-  text("LEVEL 1", width / 2, CONFIG.headerHeight / 2);
   pop();
 
   if (showInstructions) drawInstructions();
@@ -123,10 +131,28 @@ export function enter() {
 
   if (partyIsHost()) {
     shared.status = "playing";
+    // Initialize shared state for each player
+    for (const playerKey in playerData) {
+      if (!shared[playerKey]) {
+        shared[playerKey] = {
+          ball: { 
+            initialX: randomPos(playerData[playerKey].boundaries),
+            y: CONFIG.headerHeight 
+          },
+          target: {
+            y: height - CONFIG.targetH / 2 - 10,
+          },
+          color: playerData[playerKey].color,
+        };
+      }
+    }
   }
+
   localPlayerKey = roleKeeper.myRole();
-  for (const playerKey in playerData) {
-    if (partyIsHost()) {
+  
+  // Only emit hostReset after shared state is initialized
+  if (partyIsHost()) {
+    for (const playerKey in playerData) {
       partyEmit("hostReset", { playerKey });
     }
   }
