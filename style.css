@@ -9,7 +9,7 @@ body {
 
 @font-face {
   font-family: "Television";
-  src: url("fonts/NeueTelevisionS-BlackW50P0.otf") format("opentype");
+  src: url("assets/fonts/NeueTelevisionS-BlackW50P0.otf") format("opentype");
 }
 
 canvas {
