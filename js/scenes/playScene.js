@@ -153,6 +153,8 @@ export function draw() {
 }
 
 export function enter() {
+  SOUNDS.gameStart.play();
+
   for (const playerKey in playerData) {
     createWalls(playerData[playerKey]);
   }
@@ -273,13 +275,16 @@ function updateState(player) {
   if (player.ball.position.y > height) {
     if (isOnTarget(player) && !player.hitTarget) {
       player.hitTarget = true;
+      SOUNDS.nextLevel.play();
       if (partyIsHost()) {
         console.log("hit target check 2", player.key);
         partyEmit("targetHit", { playerKey: player.key });
       }
     } else {
       // player.hitTarget = false;
-
+      if (!SOUNDS.nextLevel.isPlaying()) {
+        SOUNDS.targetMiss.play();
+      }
       partyEmit("hostReset", { playerKey: player.key, newLevel: false });
     }
   }

@@ -9,4 +9,8 @@ export function preload() {
   FONTS.player2Font = loadFont("../assets/fonts/NeueTelevisionS-BlackW50P50.otf");
 
   SOUNDS.hit = loadSound("../assets/sounds/hit.mp3");
+  SOUNDS.targetMiss = loadSound("../assets/sounds/targetMiss.mp3");
+  SOUNDS.nextLevel = loadSound("../assets/sounds/nextLevel.mov");
+  SOUNDS.win = loadSound("../assets/sounds/win.mp3");
+  SOUNDS.gameStart = loadSound("../assets/sounds/gameStart.mp3");
 }

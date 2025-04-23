@@ -3,6 +3,7 @@ import { playerData } from "./player.js";
 import { engine, Composite, Body } from "./physics.js";
 import { Platform } from "./platform.js";
 import { CONFIG } from "./config.js";
+import { SOUNDS } from "./assets.js";
 import { shared } from "./scenes/titleScene.js";
 
 export function setup() {
@@ -54,12 +55,10 @@ function onTargetHit({ playerKey }) {
   console.log("onTargetHit", playerKey);
   const player = playerData[playerKey];
   const playerLevel = player.level + 1;
-  if (playerLevel <= CONFIG.numLevels) {
-    if (partyIsHost()) {
+  if (partyIsHost()) {
+    if (playerLevel <= CONFIG.numLevels) {
       partyEmit("hostReset", { playerKey, newLevel: true, playerLevel });
-    }
-  } else {
-    if (partyIsHost()) {
+    } else {
       shared.winner = player.name;
       shared.status = "end";
     }

@@ -3,7 +3,7 @@ import { renderBackground } from "../background.js";
 import { shared } from "./titleScene.js";
 import { roleKeeper } from "./playScene.js";
 import { playerData } from "../player.js";
-import { FONTS } from "../assets.js";
+import { FONTS, SOUNDS } from "../assets.js";
 
 const scrollSpeed = 2;
 let scrollPosition = 0;
@@ -21,6 +21,7 @@ export function setup() {
 
 export function enter() {
   endAnimationStarted = false;
+  SOUNDS.win.play();
 }
 
 export function update() {
