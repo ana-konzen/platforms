@@ -3,7 +3,7 @@ import { renderBackground } from "../background.js";
 import { shared } from "./titleScene.js";
 import { roleKeeper } from "./playScene.js";
 import { playerData } from "../player.js";
-import { platFont, formsFont, basicFont } from "./titleScene.js";
+import { FONTS } from "../fonts.js";
 
 const scrollSpeed = 2;
 let scrollPosition = 0;
@@ -40,13 +40,13 @@ export function draw() {
 
     textSize(18);
     // textFont("Helvetica");
-    textFont(platFont);
+    textFont(FONTS.platFont);
 
     textWidthValue = textWidth(textToScroll);
   }
 
   // textFont("Helvetica");
-  textFont(platFont);
+  textFont(FONTS.platFont);
 
   textSize(100);
   textAlign(CENTER);
@@ -66,7 +66,7 @@ export function draw() {
   const winsStartX = -width / 2;
   const winsEndX = width / 1.5;
   const winsCurrentX = lerp(winsStartX, winsEndX, winsProgress);
-  textFont(formsFont);
+  textFont(FONTS.formsFont);
   text(`WINS`, winsCurrentX, height / 2.7);
 
   textSize(18);
@@ -74,7 +74,7 @@ export function draw() {
 
   scrollPosition -= scrollSpeed;
 
-  textFont(basicFont);
+  textFont(FONTS.basicFont);
 
   for (let i = 0; i < 5; i++) {
     const xPos = scrollPosition + i * textWidthValue;

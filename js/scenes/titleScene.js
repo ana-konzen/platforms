@@ -1,5 +1,6 @@
 import { changeScene, scenes } from "../main.js";
 import { renderBackground } from "../background.js";
+import { FONTS } from "../fonts.js";
 
 let titleAnimationStartTime = 0;
 let titleAnimationStarted = false;
@@ -10,10 +11,6 @@ const scrollSpeed = 2;
 let scrollPosition = 0;
 let textWidthValue = 0;
 
-export let platFont;
-export let formsFont;
-export let basicFont;
-
 export let shared;
 
 export function mousePressed() {
@@ -21,10 +18,6 @@ export function mousePressed() {
 }
 
 export function preload() {
-  platFont = loadFont("../../fonts/NeueTelevision-RetroUltraBoldW50P0.otf");
-  formsFont = loadFont("../../fonts/NeueTelevision-RetroUltraBoldW50P50.otf");
-  basicFont = loadFont("../../fonts/NeueTelevisionS-BlackW50P50.otf");
-
   shared = partyLoadShared("shared", {
     state: "waiting",
     winner: "",
@@ -49,7 +42,7 @@ export function draw() {
     titleAnimationStarted = true;
 
     textSize(18);
-    textFont(basicFont);
+    textFont(FONTS.basicFont);
     textWidthValue = textWidth("CLICK TO ENTER LOBBY   ");
   }
 
@@ -64,7 +57,7 @@ export function draw() {
   const platStartX = -width / 2;
   const platEndX = width / 2;
   const platCurrentX = lerp(platStartX, platEndX, platProgress);
-  textFont(platFont);
+  textFont(FONTS.platFont);
   text("PLAT", platCurrentX - 50, height / 5);
 
   const formsTime = currentTime - titleDelay;
@@ -72,12 +65,12 @@ export function draw() {
   const formsStartX = -width / 2;
   const formsEndX = width / 1.5;
   const formsCurrentX = lerp(formsStartX, formsEndX, formsProgress);
-  textFont(formsFont);
+  textFont(FONTS.formsFont);
   text("FORMS", formsCurrentX - 50, height / 2.7);
 
   textSize(18);
   textAlign(LEFT);
-  textFont(basicFont);
+  textFont(FONTS.basicFont);
 
   scrollPosition -= scrollSpeed;
 

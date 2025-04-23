@@ -6,6 +6,7 @@ import { engine, Engine, Composite, Bodies } from "../physics.js";
 import { RoleKeeper } from "../util/RoleKeeper.js";
 import { renderScene } from "../render.js";
 import { shared } from "./titleScene.js";
+import { FONTS } from "../fonts.js";
 
 let localPlayerKey;
 
@@ -15,13 +16,9 @@ let showInstructions = true;
 let instructionsAnimStartTime;
 const instructionsAnimDuration = 500;
 
-let player1font, player2font;
-
 export function preload() {
   roleKeeper = new RoleKeeper(["player1", "player2"], "unassigned");
   roleKeeper.setAutoAssign(false);
-  player1font = loadFont("../../fonts/NeueTelevisionS-BlackW50P0.otf");
-  player2font = loadFont("../../fonts/NeueTelevisionS-BlackW50P50.otf");
 }
 
 export function setup() {
@@ -102,7 +99,7 @@ export function draw() {
   rect(width / 2, CONFIG.headerHeight / 2, width, CONFIG.headerHeight);
 
   // Player 1 name on far left
-  textFont(player1font);
+  textFont(FONTS.player1Font);
   textSize(16);
   textAlign(LEFT, CENTER);
   fill("#FFFDD0");
@@ -113,7 +110,7 @@ export function draw() {
   text("LEVEL " + playerData.player1.level.toString(), width / 2 - 20, CONFIG.headerHeight / 2);
 
   // Player 2 level near center-right
-  textFont(player2font);
+  textFont(FONTS.player2Font);
   textAlign(LEFT, CENTER);
   text("LEVEL " + playerData.player2.level.toString(), width / 2 + 20, CONFIG.headerHeight / 2);
 

@@ -20,6 +20,7 @@ import * as endScene from "./scenes/endScene.js";
 
 import * as player from "./player.js";
 import * as events from "./events.js";
+import * as fonts from "./fonts.js";
 
 let currentScene; // the scene being displayed
 let partyInitialized = false;
@@ -58,6 +59,9 @@ export function initializeParty() {
 // on the window object so p5.js can find them.
 
 window.preload = function () {
+  //preload fonts
+  fonts.preload();
+
   // Initialize p5.party first
   initializeParty();
 

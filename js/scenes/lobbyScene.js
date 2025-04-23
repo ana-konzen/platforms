@@ -3,7 +3,7 @@ import { renderBackground } from "../background.js";
 import { roleKeeper } from "./playScene.js";
 import { playerData } from "../player.js";
 import { CONFIG } from "../config.js";
-import { platFont, formsFont, basicFont } from "./titleScene.js";
+import { FONTS } from "../fonts.js";
 import { shared } from "./titleScene.js";
 
 let nameInput;
@@ -99,9 +99,9 @@ export function draw() {
   fill("#FFFDD0");
 
   if (!shared.exitAnimationStarted) {
-    textFont(platFont);
+    textFont(FONTS.platFont);
     text("PLAT", width / 2 - 100, height / 5);
-    textFont(formsFont);
+    textFont(FONTS.formsFont);
     text("FORMS", width / 1.5 - 100, height / 2.7);
   } else {
     const currentTime = millis() - shared.exitAnimationStartTime;
@@ -111,7 +111,7 @@ export function draw() {
     const platStartX = width / 2;
     const platEndX = -width / 2;
     const platCurrentX = lerp(platStartX, platEndX, platProgress);
-    textFont(platFont);
+    textFont(FONTS.platFont);
     text("PLAT", platCurrentX - 100, height / 5);
 
     const formsTime = currentTime - exitDelay;
@@ -119,7 +119,7 @@ export function draw() {
     const formsStartX = width / 1.5;
     const formsEndX = -width / 2;
     const formsCurrentX = lerp(formsStartX, formsEndX, formsProgress);
-    textFont(formsFont);
+    textFont(FONTS.formsFont);
     text("FORMS", formsCurrentX - 100, height / 2.7);
   }
   pop();
@@ -134,7 +134,7 @@ export function draw() {
 
     push();
     textAlign(CENTER);
-    textFont(basicFont);
+    textFont(FONTS.basicFont);
     fill("#FFFDD0");
     textSize(30);
 
