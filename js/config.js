@@ -19,7 +19,7 @@ export const CONFIG = {
   //game config
   wallW: 5,
   renderWalls: false,
-  easyMode: true,
+  easyMode: false,
   numLevels: 3,
   maxPlatforms: 5,
 
