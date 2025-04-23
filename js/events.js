@@ -5,6 +5,7 @@ import { Platform } from "./platform.js";
 import { CONFIG } from "./config.js";
 import { SOUNDS } from "./assets.js";
 import { shared } from "./scenes/titleScene.js";
+import { localPlayerKey } from "./scenes/playScene.js";
 
 export function setup() {
   partySubscribe("dropBall", onBallDrop);
@@ -98,6 +99,9 @@ function onBallDrop({ player }) {
 
 function onPlatformAdded({ playerKey, x, y, id }) {
   const platform = new Platform(x, y, id, playerData[playerKey].level);
+  if (localPlayerKey === playerKey) {
+    platform.selected = true;
+  }
   playerData[playerKey].platforms.push(platform);
 }
 

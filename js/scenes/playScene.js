@@ -8,7 +8,7 @@ import { renderScene } from "../render.js";
 import { shared } from "./titleScene.js";
 import { FONTS, SOUNDS } from "../assets.js";
 
-let localPlayerKey;
+export let localPlayerKey;
 
 export let roleKeeper;
 
