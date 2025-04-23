@@ -61,6 +61,7 @@ export function renderScene(player) {
   pg.push();
   pg.translate(-xOffset, 0);
 
+  // draw walls
   if (CONFIG.renderWalls) {
     pg.fill(CONFIG.wallColor);
     for (const wall of player.walls) {
@@ -68,6 +69,7 @@ export function renderScene(player) {
     }
   }
 
+  //draw target
   pg.fill(levelConfig.targetColor);
   pg.rect(
     shared[player.key].target.x,
@@ -77,15 +79,18 @@ export function renderScene(player) {
     levelConfig.targetH / 2
   );
 
+  //draw platforms
   pg.fill(levelConfig.platformColor);
   for (const platform of player.platforms) {
     platform.draw(pg, player.ballDropped);
   }
 
+  //draw ball
   pg.fill(CONFIG.ballColor);
   pg.ellipse(player.ball.position.x, player.ball.position.y, CONFIG.ballRadius * 2);
 
   pg.pop();
 
+  // draw p5 graphis
   image(pg, xOffset, 0);
 }
