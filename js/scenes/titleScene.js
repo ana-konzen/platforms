@@ -49,7 +49,7 @@ export function draw() {
     titleAnimationStarted = true;
 
     textSize(18);
-    textFont("Helvetica");
+    textFont(basicFont);
     textWidthValue = textWidth("CLICK TO ENTER LOBBY   ");
   }
 

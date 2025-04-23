@@ -15,6 +15,8 @@ let platform1AnimationStarted = false;
 let platform2AnimationStarted = false;
 let platform1AnimationStartTime;
 let platform2AnimationStartTime;
+
+//animation config
 const platformAnimationDuration = 800;
 const exitAnimationDuration = 1000;
 const exitDelay = 300;
@@ -68,17 +70,6 @@ export function setup() {
   });
 }
 
-export function enter() {
-  if (partyIsHost()) {
-    shared.status = "waiting";
-  }
-  isEnteringName = false;
-  currentPlayerRole = null;
-  nameInputContainer.style("display", "none");
-  platform1AnimationStarted = false;
-  platform2AnimationStarted = false;
-}
-
 export function update() {
   const player1 = roleKeeper.guestsWithRole("player1")[0];
   const player2 = roleKeeper.guestsWithRole("player2")[0];
@@ -96,140 +87,6 @@ export function update() {
   if (shared.status === "playing") {
     changeScene(scenes.play);
   }
-}
-
-const handleUnassign = () => {
-  roleKeeper.requestRole("unassigned");
-  if (currentPlayerRole === "player1") {
-    shared.player1.name = "";
-    platform1AnimationStarted = false;
-  } else if (currentPlayerRole === "player2") {
-    shared.player2.name = "";
-    platform2AnimationStarted = false;
-  }
-  nameInput.value("");
-  currentPlayerRole = null;
-};
-
-export function mousePressed() {
-  if (
-    isEnteringName &&
-    mouseY > nameInputContainer.elt.offsetTop &&
-    mouseY < nameInputContainer.elt.offsetTop + nameInputContainer.elt.offsetHeight &&
-    mouseX > nameInputContainer.elt.offsetLeft &&
-    mouseX < nameInputContainer.elt.offsetLeft + nameInputContainer.elt.offsetWidth
-  ) {
-    return;
-  }
-
-  if (isEnteringName) return;
-
-  const buttonRadius = 8;
-
-  if (roleKeeper.myRole() === "player1") {
-    textSize(30);
-    const nameWidth = textWidth(shared.player1.name.toUpperCase());
-    const buttonX = width * 0.35 - nameWidth / 2 - 15;
-    const buttonY = height * 0.6 - 20 - 10;
-    if (dist(mouseX, mouseY, buttonX, buttonY) < buttonRadius) {
-      currentPlayerRole = "player1";
-      handleUnassign();
-      return;
-    }
-  }
-
-  if (roleKeeper.myRole() === "player2") {
-    textSize(30);
-    const nameWidth = textWidth(shared.player2.name.toUpperCase());
-    const buttonX = width * 0.65 - nameWidth / 2 - 15;
-    const buttonY = height * 0.6 - 20 - 10;
-    if (dist(mouseX, mouseY, buttonX, buttonY) < buttonRadius) {
-      currentPlayerRole = "player2";
-      handleUnassign();
-      return;
-    }
-  }
-
-  if (mouseX < width * 0.5) {
-    if (!roleKeeper.guestsWithRole("player1")[0]) {
-      isEnteringName = true;
-      currentPlayerRole = "player1";
-      nameInputContainer.style("display", "flex");
-      nameInput.elt.focus();
-    }
-  }
-  if (mouseX > width * 0.5) {
-    if (!roleKeeper.guestsWithRole("player2")[0]) {
-      isEnteringName = true;
-      currentPlayerRole = "player2";
-      nameInputContainer.style("display", "flex");
-      nameInput.elt.focus();
-    }
-  }
-}
-
-export function keyPressed() {
-  const player1 = roleKeeper.guestsWithRole("player1")[0];
-  const player2 = roleKeeper.guestsWithRole("player2")[0];
-  if (partyIsHost() && player1 && player2 && !shared.exitAnimationStarted) {
-    shared.exitAnimationStarted = true;
-    shared.exitAnimationStartTime = millis();
-  }
-}
-
-function drawCloseButton(x, y) {
-  push();
-  const buttonRadius = 8;
-  const xSize = 5;
-
-  stroke("#FFFDD0");
-  strokeWeight(1);
-  noFill();
-  circle(x, y, buttonRadius * 2);
-
-  line(x - xSize, y - xSize, x + xSize, y + xSize);
-  line(x - xSize, y + xSize, x + xSize, y - xSize);
-  pop();
-}
-
-function drawPlatform(x, y, width, height, isEmpty, isPlayer1) {
-  push();
-
-  noStroke();
-  rectMode(CENTER);
-
-  if (isEmpty) {
-    fill(CONFIG.platformColor);
-  } else {
-    fill(isPlayer1 ? CONFIG.player1Color : CONFIG.player2Color);
-  }
-
-  if (isPlayer1 && !platform1AnimationStarted) {
-    platform1AnimationStartTime = millis();
-    platform1AnimationStarted = true;
-  } else if (!isPlayer1 && !platform2AnimationStarted) {
-    platform2AnimationStartTime = millis();
-    platform2AnimationStarted = true;
-  }
-
-  let finalScale = 1;
-  if (isEmpty) {
-    finalScale = 1 + 0.03 * sin(frameCount * 0.05);
-  }
-
-  if ((isPlayer1 && platform1AnimationStarted) || (!isPlayer1 && platform2AnimationStarted)) {
-    const animationStartTime = isPlayer1 ? platform1AnimationStartTime : platform2AnimationStartTime;
-    const animationProgress = constrain((millis() - animationStartTime) / platformAnimationDuration, 0, 1);
-    const easedProgress = 1 - pow(1 - animationProgress, 3);
-    finalScale *= 0.3 + 0.7 * easedProgress;
-  }
-
-  translate(x, y);
-  scale(finalScale);
-  translate(-x, -y);
-  rect(x, y, width, height, height / 2);
-
-  pop();
 }
 
 export function draw() {
@@ -363,6 +220,155 @@ export function draw() {
   }
 }
 
+export function mousePressed() {
+  if (
+    isEnteringName &&
+    mouseY > nameInputContainer.elt.offsetTop &&
+    mouseY < nameInputContainer.elt.offsetTop + nameInputContainer.elt.offsetHeight &&
+    mouseX > nameInputContainer.elt.offsetLeft &&
+    mouseX < nameInputContainer.elt.offsetLeft + nameInputContainer.elt.offsetWidth
+  ) {
+    return;
+  }
+
+  if (isEnteringName) return;
+
+  const buttonRadius = 8;
+
+  if (roleKeeper.myRole() === "player1") {
+    textSize(30);
+    const nameWidth = textWidth(shared.player1.name.toUpperCase());
+    const buttonX = width * 0.35 - nameWidth / 2 - 15;
+    const buttonY = height * 0.6 - 20 - 10;
+    if (dist(mouseX, mouseY, buttonX, buttonY) < buttonRadius) {
+      currentPlayerRole = "player1";
+      handleUnassign();
+      return;
+    }
+  }
+
+  if (roleKeeper.myRole() === "player2") {
+    textSize(30);
+    const nameWidth = textWidth(shared.player2.name.toUpperCase());
+    const buttonX = width * 0.65 - nameWidth / 2 - 15;
+    const buttonY = height * 0.6 - 20 - 10;
+    if (dist(mouseX, mouseY, buttonX, buttonY) < buttonRadius) {
+      currentPlayerRole = "player2";
+      handleUnassign();
+      return;
+    }
+  }
+
+  if (mouseX < width * 0.5) {
+    if (!roleKeeper.guestsWithRole("player1")[0]) {
+      isEnteringName = true;
+      currentPlayerRole = "player1";
+      nameInputContainer.style("display", "flex");
+      nameInput.elt.focus();
+    }
+  }
+  if (mouseX > width * 0.5) {
+    if (!roleKeeper.guestsWithRole("player2")[0]) {
+      isEnteringName = true;
+      currentPlayerRole = "player2";
+      nameInputContainer.style("display", "flex");
+      nameInput.elt.focus();
+    }
+  }
+}
+
+export function keyPressed() {
+  if (isEnteringName) return;
+  if (!partyIsHost()) return;
+  if (shared.exitAnimationStarted) return;
+
+  const player1 = roleKeeper.guestsWithRole("player1")[0];
+  const player2 = roleKeeper.guestsWithRole("player2")[0];
+  if (player1 && player2) {
+    shared.exitAnimationStarted = true;
+    shared.exitAnimationStartTime = millis();
+  }
+}
+
+export function enter() {
+  if (partyIsHost()) {
+    shared.status = "waiting";
+  }
+  isEnteringName = false;
+  currentPlayerRole = null;
+  nameInputContainer.style("display", "none");
+  platform1AnimationStarted = false;
+  platform2AnimationStarted = false;
+}
+
 export function exit() {
   nameInputContainer.style("display", "none");
+}
+
+function handleUnassign() {
+  roleKeeper.requestRole("unassigned");
+  if (currentPlayerRole === "player1") {
+    shared.player1.name = "";
+    platform1AnimationStarted = false;
+  } else if (currentPlayerRole === "player2") {
+    shared.player2.name = "";
+    platform2AnimationStarted = false;
+  }
+  nameInput.value("");
+  currentPlayerRole = null;
+}
+
+function drawCloseButton(x, y) {
+  push();
+  const buttonRadius = 8;
+  const xSize = 5;
+
+  stroke("#FFFDD0");
+  strokeWeight(1);
+  noFill();
+  circle(x, y, buttonRadius * 2);
+
+  line(x - xSize, y - xSize, x + xSize, y + xSize);
+  line(x - xSize, y + xSize, x + xSize, y - xSize);
+  pop();
+}
+
+function drawPlatform(x, y, width, height, isEmpty, isPlayer1) {
+  push();
+
+  noStroke();
+  rectMode(CENTER);
+
+  if (isEmpty) {
+    fill(CONFIG.platformColor);
+  } else {
+    fill(isPlayer1 ? CONFIG.player1Color : CONFIG.player2Color);
+  }
+
+  if (isPlayer1 && !platform1AnimationStarted) {
+    platform1AnimationStartTime = millis();
+    platform1AnimationStarted = true;
+  } else if (!isPlayer1 && !platform2AnimationStarted) {
+    platform2AnimationStartTime = millis();
+    platform2AnimationStarted = true;
+  }
+
+  let finalScale = 1;
+  if (isEmpty) {
+    finalScale = 1 + 0.03 * sin(frameCount * 0.05);
+  }
+
+  if ((isPlayer1 && platform1AnimationStarted) || (!isPlayer1 && platform2AnimationStarted)) {
+    const animationStartTime = isPlayer1 ? platform1AnimationStartTime : platform2AnimationStartTime;
+    const animationProgress = constrain((millis() - animationStartTime) / platformAnimationDuration, 0, 1);
+    const easedProgress = 1 - pow(1 - animationProgress, 3);
+    finalScale *= 0.3 + 0.7 * easedProgress;
+  }
+
+  translate(x, y);
+  scale(finalScale);
+  translate(-x, -y);
+  rect(x, y, width, height, height / 2);
+
+  pop();
 }

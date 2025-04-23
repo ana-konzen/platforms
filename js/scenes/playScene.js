@@ -29,17 +29,20 @@ export function setup() {
     .addClass("button-cont")
     .style("width", width + "px")
     .style("height", height + "px");
+
   for (const playerKey in playerData) {
     const buttonX = playerKey === "player1" ? 0 : width - CONFIG.resetButtonW;
-    const resetButton = createButton("↻")
+
+    // create reset button
+    createButton("↻")
       .addClass("reset-button")
       .parent(buttonCont)
       .style("left", buttonX + "px")
       .style("width", CONFIG.resetButtonW + "px")
-      .style("top", 0 + "px");
-    resetButton.mousePressed(() => {
-      partyEmit("hostReset", { playerKey, newLevel: false });
-    });
+      .style("top", 0 + "px")
+      .mousePressed(() => {
+        partyEmit("hostReset", { playerKey, newLevel: false });
+      });
   }
 
   rectMode(CENTER);
