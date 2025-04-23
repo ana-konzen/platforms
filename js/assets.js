@@ -10,7 +10,7 @@ export function preload() {
 
   SOUNDS.hit = loadSound("../assets/sounds/hit.mp3");
   SOUNDS.targetMiss = loadSound("../assets/sounds/targetMiss.mp3");
-  SOUNDS.nextLevel = loadSound("../assets/sounds/nextLevel.mov");
+  SOUNDS.nextLevel = loadSound("../assets/sounds/nextLevel.mp3");
   SOUNDS.win = loadSound("../assets/sounds/win.mp3");
   SOUNDS.gameStart = loadSound("../assets/sounds/gameStart.mp3");
 }
