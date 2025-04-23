@@ -40,14 +40,12 @@ export function setup() {
     right: width - CONFIG.wallW / 2,
   };
 
-  const headerHeight = 40; // Match the header height in playScene.js
-
   for (const playerKey in playerData) {
     const player = playerData[playerKey];
     if (partyIsHost()) {
       const ballInitialX = randomPos(player.boundaries);
       shared[playerKey] = {
-        ball: { initialX: ballInitialX, y: headerHeight },
+        ball: { initialX: ballInitialX, y: CONFIG.headerHeight },
         target: {
           initialX: CONFIG.easyMode
             ? ballInitialX
@@ -66,7 +64,7 @@ export function setup() {
     if (shared[playerKey]?.ball?.initialX !== undefined) {
       player.ball = Bodies.circle(
         shared[playerKey].ball.initialX,
-        headerHeight,
+        CONFIG.headerHeight,
         CONFIG.ballRadius,
         ballOptions
       );
