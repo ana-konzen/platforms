@@ -135,9 +135,9 @@ export function enter() {
     for (const playerKey in playerData) {
       if (!shared[playerKey]) {
         shared[playerKey] = {
-          ball: { 
+          ball: {
             initialX: randomPos(playerData[playerKey].boundaries),
-            y: CONFIG.headerHeight 
+            y: CONFIG.headerHeight,
           },
           target: {
             y: height - CONFIG.targetH / 2 - 10,
@@ -149,7 +149,7 @@ export function enter() {
   }
 
   localPlayerKey = roleKeeper.myRole();
-  
+
   // Only emit hostReset after shared state is initialized
   if (partyIsHost()) {
     for (const playerKey in playerData) {
@@ -206,7 +206,6 @@ export function mousePressed() {
   for (const platform of player.platforms) {
     platform.selected = false;
   }
-  if (player.platforms.length >= CONFIG[getLevelName(player.level)].maxPlatforms) return;
   if (player.ballDropped) return;
   if (mouseX < player.boundaries.left || mouseX > player.boundaries.right) return;
 
@@ -216,6 +215,8 @@ export function mousePressed() {
       return;
     }
   }
+
+  if (player.platforms.length >= CONFIG[getLevelName(player.level)].maxPlatforms) return;
 
   partyEmit("addPlatform", {
     playerKey: localPlayerKey,
