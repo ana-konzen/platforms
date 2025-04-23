@@ -20,7 +20,7 @@ import * as endScene from "./scenes/endScene.js";
 
 import * as player from "./player.js";
 import * as events from "./events.js";
-import * as fonts from "./fonts.js";
+import * as assets from "./assets.js";
 
 let currentScene; // the scene being displayed
 let partyInitialized = false;
@@ -39,7 +39,7 @@ export function initializeParty() {
     try {
       // Only connect if not already connected
       if (!window.partyIsConnected?.()) {
-        partyConnect("wss://demoserver.p5party.org", "ana_fionna_danit");
+        partyConnect("wss://demoserver.p5party.org", "ana_fionna_danit_test");
         console.log("p5.party initialized");
       } else {
         console.log("p5.party already connected");
@@ -59,8 +59,8 @@ export function initializeParty() {
 // on the window object so p5.js can find them.
 
 window.preload = function () {
-  //preload fonts
-  fonts.preload();
+  //preload assets
+  assets.preload();
 
   // Initialize p5.party first
   initializeParty();

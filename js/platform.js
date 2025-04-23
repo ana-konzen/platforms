@@ -12,10 +12,14 @@ export class Platform {
     this.h = CONFIG[getLevelName(this.level)].platformH;
     this.body = Bodies.rectangle(x, y, this.w, this.h, {
       isStatic: true,
+      label: "platform",
+      plugin: {
+        hit: false,
+      },
     });
     this.found = false;
     this.id = id;
-    this.selected = true;
+    this.selected = false;
 
     Composite.add(engine.world, this.body);
   }
@@ -54,16 +58,28 @@ export class Platform {
     }
   }
 
-  draw(pg, ballDropped) {
-    pg.push();
+  updateColor(pg, ballDropped) {
+    const levelConfig = CONFIG[getLevelName(this.level)];
+
+    if (this.body.plugin.hit) {
+      pg.fill(levelConfig.platformHitColor || CONFIG.platformHitColor);
+    } else {
+      pg.fill(levelConfig.platformColor || CONFIG.platformColor);
+    }
+
     if (!ballDropped) {
       this.find();
       if (this.found || this.selected) {
-        pg.fill(CONFIG[getLevelName(this.level)].platformFoundColor || CONFIG.platformFoundColor);
+        pg.fill(levelConfig.platformFoundColor || CONFIG.platformFoundColor);
       } else {
-        pg.fill(CONFIG[getLevelName(this.level)].platformColor || CONFIG.platformColor);
+        pg.fill(levelConfig.platformColor || CONFIG.platformColor);
       }
     }
+  }
+
+  draw(pg, ballDropped) {
+    pg.push();
+    this.updateColor(pg, ballDropped);
     pg.translate(this.x, this.y);
     pg.rotate(this.angle);
     pg.rect(0, 0, this.w, this.h, this.h / 2);

@@ -6,6 +6,7 @@ export const CONFIG = {
   ballColor: "#EBC733",
   platformColor: "#FFFDD0",
   platformFoundColor: "blue",
+  platformHitColor: "red",
   player1Color: "#681037",
   player2Color: "#C8121D",
   headerHeight: 40,

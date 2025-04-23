@@ -1,6 +1,6 @@
 import { changeScene, scenes } from "../main.js";
 import { renderBackground } from "../background.js";
-import { FONTS } from "../fonts.js";
+import { FONTS } from "../assets.js";
 
 let titleAnimationStartTime = 0;
 let titleAnimationStarted = false;

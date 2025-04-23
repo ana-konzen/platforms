@@ -28,6 +28,7 @@ export const playerData = {
 
 const ballOptions = {
   restitution: 0.7,
+  label: "ball",
 };
 
 export function setup() {

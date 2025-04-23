@@ -3,7 +3,7 @@ import { renderBackground } from "../background.js";
 import { roleKeeper } from "./playScene.js";
 import { playerData } from "../player.js";
 import { CONFIG } from "../config.js";
-import { FONTS } from "../fonts.js";
+import { FONTS } from "../assets.js";
 import { shared } from "./titleScene.js";
 
 let nameInput;

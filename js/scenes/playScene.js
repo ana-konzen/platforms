@@ -2,11 +2,11 @@ import { CONFIG } from "../config.js";
 import { changeScene, scenes } from "../main.js";
 import { makeId, getLevelName, randomPos } from "../util/util.js";
 import { playerData } from "../player.js";
-import { engine, Engine, Composite, Bodies } from "../physics.js";
+import { engine, Engine, Composite, Bodies, Events } from "../physics.js";
 import { RoleKeeper } from "../util/RoleKeeper.js";
 import { renderScene } from "../render.js";
 import { shared } from "./titleScene.js";
-import { FONTS } from "../fonts.js";
+import { FONTS } from "../assets.js";
 
 let localPlayerKey;
 
@@ -43,6 +43,30 @@ export function setup() {
   }
 
   rectMode(CENTER);
+
+  Events.on(engine, "collisionStart", (event) => {
+    event.pairs.forEach((pair) => {
+      const [A, B] = [pair.bodyA, pair.bodyB];
+
+      if (A.label === "ball" && B.label === "platform") {
+        B.plugin.hit = true;
+      } else if (B.label === "ball" && A.label === "platform") {
+        A.plugin.hit = true;
+      }
+    });
+  });
+
+  // Events.on(engine, "collisionEnd", (event) => {
+  //   event.pairs.forEach((pair) => {
+  //     const [A, B] = [pair.bodyA, pair.bodyB];
+
+  //     if (A.label === "ball" && B.label === "platform") {
+  //       B.plugin.hit = false;
+  //     } else if (B.label === "ball" && A.label === "platform") {
+  //       A.plugin.hit = false;
+  //     }
+  //   });
+  // });
 }
 
 export function update() {
