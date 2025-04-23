@@ -59,9 +59,9 @@ export class Platform {
     if (!ballDropped) {
       this.find();
       if (this.found || this.selected) {
-        pg.fill(CONFIG[getLevelName(this.level)].platformFoundColor);
+        pg.fill(CONFIG[getLevelName(this.level)].platformFoundColor || CONFIG.platformFoundColor);
       } else {
-        pg.fill(CONFIG[getLevelName(this.level)].platformColor);
+        pg.fill(CONFIG[getLevelName(this.level)].platformColor || CONFIG.platformColor);
       }
     }
     pg.translate(this.x, this.y);

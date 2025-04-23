@@ -11,18 +11,18 @@ export const CONFIG = {
   headerHeight: 40,
   resetButtonW: 40,
 
+  // for lobby scene
+  platformH: 10,
+  platformW: 40,
+
   //game config
   wallW: 5,
   renderWalls: false,
   easyMode: false,
   numLevels: 3,
-
-  platformW: 40,
-  platformH: 10,
-  targetW: 50,
-  targetH: 10,
-  ballRadius: 10,
   maxPlatforms: 5,
+
+  ballRadius: 10,
 
   //level config
   level1: {
@@ -33,8 +33,6 @@ export const CONFIG = {
     targetH: 20,
     platformW: 60,
     platformH: 20,
-    ballRadius: 10,
-    maxPlatforms: 5,
     platformColor: "#FFFDD0",
     platformFoundColor: "blue",
     targetColor: "#B2D89E",
@@ -53,8 +51,6 @@ export const CONFIG = {
     targetH: 20,
     platformW: 50,
     platformH: 20,
-    ballRadius: 10,
-    maxPlatforms: 5,
     platformColor: "#FFFDD0",
     platformFoundColor: "blue",
     targetColor: "#B2D89E",
@@ -74,8 +70,6 @@ export const CONFIG = {
     targetH: 20,
     platformW: 40,
     platformH: 20,
-    ballRadius: 10,
-    maxPlatforms: 3,
     platformColor: "#FFFDD0",
     platformFoundColor: "blue",
     targetColor: "#B2D89E",

@@ -49,7 +49,6 @@ export function setup() {
       shared[playerKey] = {
         ball: { initialX: ballInitialX, y: headerHeight },
         target: {
-          y: height - CONFIG.targetH / 2 - 10,
           initialX: CONFIG.easyMode
             ? ballInitialX
             : randomPos(
@@ -58,7 +57,7 @@ export function setup() {
                 ballInitialX,
                 CONFIG["level1"].targetRange,
                 CONFIG["level1"].targetW / 2
-              )
+              ),
         },
         color: player.color,
       };

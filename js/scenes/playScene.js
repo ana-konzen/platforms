@@ -140,7 +140,7 @@ export function enter() {
             y: CONFIG.headerHeight,
           },
           target: {
-            y: height - CONFIG.targetH / 2 - 10,
+            y: height - CONFIG.level1.targetH / 2 - 10,
           },
           color: playerData[playerKey].color,
         };
@@ -216,7 +216,7 @@ export function mousePressed() {
     }
   }
 
-  if (player.platforms.length >= CONFIG[getLevelName(player.level)].maxPlatforms) return;
+  if (player.platforms.length >= CONFIG.maxPlatforms) return;
 
   partyEmit("addPlatform", {
     playerKey: localPlayerKey,

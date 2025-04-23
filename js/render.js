@@ -8,14 +8,14 @@ const playerAnimState = {
     isAnimating: false,
     animStartTime: 0,
     prevBgColor: null,
-    prevLevel: 1
+    prevLevel: 1,
   },
   player2: {
     isAnimating: false,
     animStartTime: 0,
     prevBgColor: null,
-    prevLevel: 1
-  }
+    prevLevel: 1,
+  },
 };
 
 const LEVEL_ANIM_DURATION = 800; // Animation duration in milliseconds
@@ -31,7 +31,8 @@ export function renderScene(player) {
   if (player.level !== playerAnimState[player.key].prevLevel) {
     playerAnimState[player.key].isAnimating = true;
     playerAnimState[player.key].animStartTime = millis();
-    playerAnimState[player.key].prevBgColor = CONFIG[getLevelName(playerAnimState[player.key].prevLevel)][player.key].bgColor;
+    playerAnimState[player.key].prevBgColor =
+      CONFIG[getLevelName(playerAnimState[player.key].prevLevel)][player.key].bgColor;
     playerAnimState[player.key].prevLevel = player.level;
   }
 
@@ -39,15 +40,15 @@ export function renderScene(player) {
   if (playerAnimState[player.key].isAnimating) {
     const currentTime = millis() - playerAnimState[player.key].animStartTime;
     const progress = constrain(currentTime / LEVEL_ANIM_DURATION, 0, 1);
-    
+
     // Draw old background
     pg.background(playerAnimState[player.key].prevBgColor);
-    
+
     // Draw new background sliding up from bottom
     pg.push();
     pg.fill(levelConfig[player.key].bgColor);
     const slideHeight = lerp(0, pg.height, progress);
-    pg.rect(pg.width/2, pg.height - slideHeight/2, pg.width, slideHeight);
+    pg.rect(pg.width / 2, pg.height - slideHeight / 2, pg.width, slideHeight);
     pg.pop();
 
     if (progress >= 1) {
@@ -70,7 +71,7 @@ export function renderScene(player) {
   pg.fill(levelConfig.targetColor);
   pg.rect(
     shared[player.key].target.x,
-    shared[player.key].target.y,
+    height - levelConfig.targetH / 2 - 10,
     levelConfig.targetW,
     levelConfig.targetH,
     levelConfig.targetH / 2
@@ -82,7 +83,7 @@ export function renderScene(player) {
   }
 
   pg.fill(CONFIG.ballColor);
-  pg.ellipse(player.ball.position.x, player.ball.position.y, levelConfig.ballRadius * 2);
+  pg.ellipse(player.ball.position.x, player.ball.position.y, CONFIG.ballRadius * 2);
 
   pg.pop();
 

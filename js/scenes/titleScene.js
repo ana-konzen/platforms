@@ -17,7 +17,7 @@ export let basicFont;
 export let shared;
 
 export function mousePressed() {
-  changeScene(scenes.lobby);
+  if (shared.state === "waiting") changeScene(scenes.lobby);
 }
 
 export function preload() {
@@ -81,7 +81,7 @@ export function draw() {
 
   scrollPosition -= scrollSpeed;
 
-  const textToScroll = "CLICK TO ENTER LOBBY   ";
+  const textToScroll = shared.state === "waiting" ? "CLICK TO ENTER LOBBY   " : "GAME IN PROGRESS   ";
 
   for (let i = 0; i < 5; i++) {
     const xPos = scrollPosition + i * textWidthValue;
