@@ -6,7 +6,7 @@ import { engine, Engine, Composite, Bodies, Events } from "../physics.js";
 import { RoleKeeper } from "../util/RoleKeeper.js";
 import { renderScene } from "../render.js";
 import { shared } from "./titleScene.js";
-import { FONTS } from "../assets.js";
+import { FONTS, SOUNDS } from "../assets.js";
 
 let localPlayerKey;
 
@@ -47,6 +47,10 @@ export function setup() {
   Events.on(engine, "collisionStart", (event) => {
     event.pairs.forEach((pair) => {
       const [A, B] = [pair.bodyA, pair.bodyB];
+
+      if (A.label === "ball" || B.label === "ball") {
+        SOUNDS.hit.play();
+      }
 
       if (A.label === "ball" && B.label === "platform") {
         B.plugin.hit = true;
@@ -291,9 +295,13 @@ function isOnTarget(player) {
 }
 
 function createWalls(player) {
+  const wallOptions = {
+    isStatic: true,
+    label: "wall",
+  };
   player.walls = [
-    Bodies.rectangle(player.boundaries.left, height / 2, CONFIG.wallW, height, { isStatic: true }),
-    Bodies.rectangle(player.boundaries.right, height / 2, CONFIG.wallW, height, { isStatic: true }),
+    Bodies.rectangle(player.boundaries.left, height / 2, CONFIG.wallW, height, wallOptions),
+    Bodies.rectangle(player.boundaries.right, height / 2, CONFIG.wallW, height, wallOptions),
   ];
 
   Composite.add(engine.world, player.walls);
