@@ -1,6 +1,7 @@
 import { changeScene, scenes } from "../main.js";
 import { renderBackground } from "../background.js";
 import { FONTS } from "../assets.js";
+import { CONFIG } from "../config.js";
 
 let titleAnimationStartTime = 0;
 let titleAnimationStarted = false;
@@ -28,9 +29,31 @@ export function preload() {
   });
 }
 
+export function setup() {
+  createDiv()
+    .addClass("easy-cont")
+    .style("width", width + "px")
+    .style("height", height + "px");
+}
+
 export function enter() {
   if (partyIsHost()) {
     shared.status = "waiting";
+  }
+}
+
+export function keyPressed() {
+  if (partyIsHost()) {
+    if (key === "e" || key === "E") {
+      // toggle easy mode
+      CONFIG.easyMode = !CONFIG.easyMode;
+      console.log("Easy mode:", CONFIG.easyMode);
+      if (CONFIG.easyMode) {
+        select(".easy-cont").style("display", "block");
+      } else {
+        select(".easy-cont").style("display", "none");
+      }
+    }
   }
 }
 
