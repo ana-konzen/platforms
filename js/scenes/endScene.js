@@ -40,13 +40,11 @@ export function draw() {
     endAnimationStarted = true;
 
     textSize(18);
-    // textFont("Helvetica");
     textFont(FONTS.platFont);
 
     textWidthValue = textWidth(textToScroll);
   }
 
-  // textFont("Helvetica");
   textFont(FONTS.platFont);
 
   textSize(100);

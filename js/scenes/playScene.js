@@ -338,6 +338,7 @@ function drawInstructions() {
     text("HOW TO PLAY", width / 2, height / 2 - 100);
 
     textSize(16);
+    textFont("Helvetica");
     text("CLICK AND DRAG TO PLACE PLATFORMS", width / 2, height / 2 - 40);
     text("USE ARROW KEYS TO ROTATE PLATFORMS", width / 2, height / 2);
     text("PRESS 'B' TO DROP THE BALL", width / 2, height / 2 + 40);
