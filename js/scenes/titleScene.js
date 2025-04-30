@@ -15,6 +15,13 @@ let textWidthValue = 0;
 export let shared;
 
 export function mousePressed() {
+  if (getAudioContext().state !== "running") {
+    getAudioContext().resume();
+    if (!SOUNDS.title.isPlaying()) {
+      SOUNDS.title.loop();
+    }
+  }
+
   if (shared.state === "waiting") changeScene(scenes.lobby);
 }
 
@@ -70,13 +77,6 @@ export function keyPressed() {
 }
 
 export function draw() {
-  if (getAudioContext().state !== "running") {
-    getAudioContext().resume();
-    if (!SOUNDS.title.isPlaying()) {
-      SOUNDS.title.loop();
-    }
-  }
-
   renderBackground();
 
   if (!titleAnimationStarted) {
