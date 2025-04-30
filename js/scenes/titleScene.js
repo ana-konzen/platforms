@@ -90,18 +90,18 @@ export function draw() {
   const platTime = currentTime;
   const platProgress = constrain(platTime / titleAnimationDuration, 0, 1);
   const platStartX = -width / 2;
-  const platEndX = width / 2;
+  const platEndX = width / 2 - 100;
   const platCurrentX = lerp(platStartX, platEndX, platProgress);
   textFont(FONTS.platFont);
-  text("PLAT", platCurrentX - 50, height / 5);
+  text("PLAT", platCurrentX, height / 5);
 
   const formsTime = currentTime - titleDelay;
   const formsProgress = constrain(formsTime / titleAnimationDuration, 0, 1);
   const formsStartX = -width / 2;
-  const formsEndX = width / 1.5;
+  const formsEndX = width / 1.5 - 100;
   const formsCurrentX = lerp(formsStartX, formsEndX, formsProgress);
   textFont(FONTS.formsFont);
-  text("FORMS", formsCurrentX - 50, height / 2.7);
+  text("FORMS", formsCurrentX, height / 2.7);
 
   textSize(18);
   textAlign(LEFT);
