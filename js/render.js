@@ -1,6 +1,7 @@
 import { shared } from "./scenes/titleScene.js";
 import { CONFIG } from "./config.js";
 import { getLevelName } from "./util/util.js";
+import { IMAGES } from "./assets.js";
 
 // Animation state for each player
 const playerAnimState = {
@@ -19,6 +20,8 @@ const playerAnimState = {
 };
 
 const LEVEL_ANIM_DURATION = 800; // Animation duration in milliseconds
+const ARROW_PULSE_SPEED = 0.004; // Speed of arrow pulsing
+const ARROW_PULSE_AMOUNT = 8; // How many pixels up/down the arrow moves
 
 export function renderScene(player) {
   const pg = player.pg;
@@ -88,6 +91,20 @@ export function renderScene(player) {
   //draw ball
   pg.fill(CONFIG.ballColor);
   pg.ellipse(player.ball.position.x, player.ball.position.y, CONFIG.ballRadius * 2);
+
+  // draw arrows below ball if ball hasn't been dropped
+  if (!player.ballDropped) {
+    const arrowsWidth = CONFIG.ballRadius * 3; // Adjust size relative to ball
+    const arrowsHeight = CONFIG.ballRadius * 2;
+    // Calculate pulsing offset using sin wave
+    const pulseOffset = sin(millis() * ARROW_PULSE_SPEED) * ARROW_PULSE_AMOUNT;
+    pg.image(IMAGES.arrows, 
+      player.ball.position.x - arrowsWidth/2,
+      player.ball.position.y + CONFIG.ballRadius + pulseOffset,
+      arrowsWidth,
+      arrowsHeight
+    );
+  }
 
   pg.pop();
 

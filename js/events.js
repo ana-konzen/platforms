@@ -40,7 +40,7 @@ function onHostReset({ playerKey, newLevel = true, playerLevel = null }) {
 
   shared[playerKey].ball.x = shared[playerKey].ball.initialX;
 
-  shared[playerKey].ball.y = CONFIG.headerHeight;
+  shared[playerKey].ball.y = CONFIG.headerHeight - 10;
 
   shared[playerKey].target.x = shared[playerKey].target.initialX;
 
