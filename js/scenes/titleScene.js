@@ -70,6 +70,13 @@ export function keyPressed() {
 }
 
 export function draw() {
+  if (getAudioContext().state !== "running") {
+    getAudioContext().resume();
+    if (!SOUNDS.title.isPlaying()) {
+      SOUNDS.title.loop();
+    }
+  }
+
   renderBackground();
 
   if (!titleAnimationStarted) {
