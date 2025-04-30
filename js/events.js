@@ -48,12 +48,13 @@ function onHostReset({ playerKey, newLevel = true, playerLevel = null }) {
     playerKey,
     ballX: shared[playerKey].ball.initialX,
     ballY: shared[playerKey].ball.y,
+    newLevel,
     playerLevel: level,
   });
 }
 
 function onTargetHit({ playerKey }) {
-  console.log("onTargetHit", playerKey);
+  // console.log("onTargetHit", playerKey);
   const player = playerData[playerKey];
   const playerLevel = player.level + 1;
   if (partyIsHost()) {
@@ -66,7 +67,7 @@ function onTargetHit({ playerKey }) {
   }
 }
 
-function onPlayerReset({ playerKey, ballX, ballY, playerLevel = null }) {
+function onPlayerReset({ playerKey, ballX, ballY, newLevel, playerLevel = null }) {
   console.log("onPlayerReset", playerKey);
   const player = playerData[playerKey];
   Body.setPosition(player.ball, { x: ballX, y: ballY });
@@ -75,20 +76,26 @@ function onPlayerReset({ playerKey, ballX, ballY, playerLevel = null }) {
   player.targetSpeed = CONFIG[getLevelName(player.level)].targetSpeed;
   console.log("level up", playerKey, player.level);
 
-  console.log("ballX", ballX);
-  console.log(player.ball);
-  console.log(player.ball.position.x);
+  // console.log("ballX", ballX);
+  // console.log(player.ball);
+  // console.log(player.ball.position.x);
 
   Body.setVelocity(player.ball, { x: 0, y: 0 });
   Body.setAngularVelocity(player.ball, 0);
   Body.setAngle(player.ball, 0);
   player.ballDropped = false;
   player.hitTarget = false;
-  Composite.remove(engine.world, player.ball);
+
   for (const platform of player.platforms) {
-    Composite.remove(engine.world, platform.body);
+    platform.body.plugin.hit = false;
   }
-  player.platforms = [];
+  Composite.remove(engine.world, player.ball);
+  if (newLevel) {
+    for (const platform of player.platforms) {
+      Composite.remove(engine.world, platform.body);
+    }
+    player.platforms = [];
+  }
 }
 
 function onBallDrop({ player }) {

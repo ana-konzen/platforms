@@ -284,7 +284,7 @@ function updateState(player) {
       player.hitTarget = true;
       SOUNDS.nextLevel.play();
       if (partyIsHost()) {
-        console.log("hit target check 2", player.key);
+        // console.log("hit target check 2", player.key);
         partyEmit("targetHit", { playerKey: player.key });
       }
     } else {
@@ -298,7 +298,7 @@ function updateState(player) {
 }
 
 function isOnTarget(player) {
-  console.log("hit target", player.key);
+  // console.log("hit target", player.key);
   const levelConfig = CONFIG[getLevelName(player.level)];
   return (
     player.ball.position.x >= shared[player.key].target.x - levelConfig.targetW / 2 - CONFIG.ballRadius &&
@@ -347,9 +347,10 @@ function drawInstructions() {
     textSize(16);
     textFont("Helvetica");
     text("CLICK AND DRAG TO PLACE PLATFORMS", width / 2, height / 2 - 40);
-    text("USE ARROW KEYS TO ROTATE PLATFORMS", width / 2, height / 2);
-    text("PRESS 'B' TO DROP THE BALL", width / 2, height / 2 + 40);
-    text("ADVANCE TO NEXT LEVEL ONCE BALL HITS TARGET", width / 2, height / 2 + 80);
+    text("YOU CAN ONLY PLACE 5 PLATFORMS!", width / 2, height / 2);
+    text("USE ARROW KEYS TO ROTATE PLATFORMS", width / 2, height / 2 + 40);
+    text("PRESS 'B' TO DROP THE BALL", width / 2, height / 2 + 80);
+    text("ADVANCE TO NEXT LEVEL ONCE BALL HITS TARGET", width / 2, height / 2 + 120);
 
     // Draw X button
     const buttonX = width / 2 + 200;
