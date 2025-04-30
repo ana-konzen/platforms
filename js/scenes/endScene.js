@@ -42,7 +42,7 @@ export function draw() {
     textSize(18);
     textFont(FONTS.platFont);
 
-    textWidthValue = textWidth(textToScroll);
+    textWidthValue = textWidth(textToScroll) + 20;
   }
 
   textFont(FONTS.platFont);

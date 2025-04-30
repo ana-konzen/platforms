@@ -78,7 +78,7 @@ export function draw() {
 
     textSize(18);
     textFont(FONTS.basicFont);
-    textWidthValue = textWidth("CLICK TO ENTER LOBBY   ");
+    textWidthValue = textWidth("CLICK TO ENTER LOBBY   ") + 20;
   }
 
   const currentTime = millis() - titleAnimationStartTime;
