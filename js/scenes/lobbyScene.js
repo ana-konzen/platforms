@@ -3,7 +3,7 @@ import { renderBackground } from "../background.js";
 import { roleKeeper } from "./playScene.js";
 import { playerData } from "../player.js";
 import { CONFIG } from "../config.js";
-import { FONTS } from "../assets.js";
+import { FONTS, SOUNDS } from "../assets.js";
 import { shared } from "./titleScene.js";
 
 let nameInput;
@@ -41,6 +41,7 @@ export function setup() {
     const playerName = nameInput.value().trim();
 
     if (playerName) {
+      SOUNDS.join.play();
       if (currentPlayerRole === "player1") {
         playerData.player1.name = playerName;
         shared.player1.name = playerName;
@@ -303,6 +304,7 @@ export function enter() {
 
 export function exit() {
   nameInputContainer.style("display", "none");
+  SOUNDS.title.stop();
 }
 
 function handleUnassign() {

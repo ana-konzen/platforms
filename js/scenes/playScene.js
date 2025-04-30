@@ -200,15 +200,18 @@ export function exit() {
 
 export function keyPressed() {
   const player = playerData[localPlayerKey];
-  if (key === "b") {
+  if (key === "b" || key === "B") {
+    if (player.ballDropped) return;
     for (const platform of player.platforms) {
       platform.selected = false;
     }
+    SOUNDS.ballDrop.play();
     partyEmit("dropBall", { player: localPlayerKey });
   }
   if (keyCode === LEFT_ARROW) {
     for (const platform of player.platforms) {
       if (platform.selected) {
+        SOUNDS.rotate.play();
         partyEmit("platformRotated", {
           playerKey: localPlayerKey,
           angle: -0.1,
@@ -220,6 +223,7 @@ export function keyPressed() {
   if (keyCode === RIGHT_ARROW) {
     for (const platform of player.platforms) {
       if (platform.selected) {
+        SOUNDS.rotate.play();
         partyEmit("platformRotated", {
           playerKey: localPlayerKey,
           angle: 0.1,
@@ -241,12 +245,15 @@ export function mousePressed() {
 
   for (const platform of player.platforms) {
     if (platform.found) {
+      SOUNDS.place.play();
       platform.selected = true;
       return;
     }
   }
 
   if (player.platforms.length >= CONFIG.maxPlatforms) return;
+
+  SOUNDS.place.play();
 
   partyEmit("addPlatform", {
     playerKey: localPlayerKey,

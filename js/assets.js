@@ -11,9 +11,14 @@ export function preload() {
 
   IMAGES.arrows = loadImage("../assets/arrows.png");
 
+  SOUNDS.title = loadSound("../assets/sounds/title.mp3");
+  SOUNDS.join = loadSound("../assets/sounds/join.mov");
+  SOUNDS.gameStart = loadSound("../assets/sounds/gameStart.mp3");
+  SOUNDS.place = loadSound("../assets/sounds/place.mp3");
+  SOUNDS.rotate = loadSound("../assets/sounds/rotate.mp3");
+  SOUNDS.ballDrop = loadSound("../assets/sounds/ballDrop.mp3");
   SOUNDS.hit = loadSound("../assets/sounds/hit.mp3");
   SOUNDS.targetMiss = loadSound("../assets/sounds/targetMiss.mp3");
   SOUNDS.nextLevel = loadSound("../assets/sounds/nextLevel.mov");
   SOUNDS.win = loadSound("../assets/sounds/win.mp3");
-  SOUNDS.gameStart = loadSound("../assets/sounds/gameStart.mp3");
 }

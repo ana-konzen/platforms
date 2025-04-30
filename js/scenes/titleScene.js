@@ -1,6 +1,6 @@
 import { changeScene, scenes } from "../main.js";
 import { renderBackground } from "../background.js";
-import { FONTS } from "../assets.js";
+import { FONTS, SOUNDS } from "../assets.js";
 import { CONFIG } from "../config.js";
 
 let titleAnimationStartTime = 0;
@@ -40,6 +40,8 @@ export function enter() {
   if (partyIsHost()) {
     shared.status = "waiting";
   }
+
+  SOUNDS.title.loop();
 }
 
 export function keyPressed() {
