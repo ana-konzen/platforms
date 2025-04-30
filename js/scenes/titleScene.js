@@ -40,6 +40,8 @@ export function enter() {
   if (partyIsHost()) {
     shared.status = "waiting";
   }
+
+  SOUNDS.title.loop();
 }
 
 export function mouseMoved() {
