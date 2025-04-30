@@ -37,14 +37,20 @@ export function setup() {
 }
 
 export function enter() {
+  if (!SOUNDS.title.isPlaying()) {
+    SOUNDS.title.loop();
+  }
   if (partyIsHost()) {
     shared.status = "waiting";
   }
 }
 
 export function mouseMoved() {
-  if (!SOUNDS.title.isPlaying()) {
-    SOUNDS.title.loop();
+  if (getAudioContext().state !== "running") {
+    getAudioContext().resume();
+    if (!SOUNDS.title.isPlaying()) {
+      SOUNDS.title.loop();
+    }
   }
 }
 
