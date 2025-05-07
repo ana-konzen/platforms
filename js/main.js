@@ -80,6 +80,8 @@ window.preload = function () {
 window.setup = function () {
   createCanvas(900, 700);
 
+  assets.setup();
+
   player.setup();
 
   Object.values(scenes).forEach((scene) => {

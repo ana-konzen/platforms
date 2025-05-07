@@ -22,3 +22,11 @@ export function preload() {
   SOUNDS.nextLevel = loadSound("../assets/sounds/nextLevel.mov");
   SOUNDS.win = loadSound("../assets/sounds/win.mp3");
 }
+
+export function setup() {
+  // Set the volume for all sounds
+  Object.values(SOUNDS).forEach((sound) => {
+    sound.amp(0.5);
+    sound.setVolume(0.5);
+  });
+}
